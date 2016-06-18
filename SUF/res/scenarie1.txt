@@ -1,0 +1,99 @@
+#Aalborg $Nord-jylland X:245 Y:156 2 Hvid 4 Rød 2 Lilla 2 Sort
+
+#Mariagerfjord $Nord-jylland X:232 Y:243 @Randers 3 Hvid 2 Rød
+
+£Hjørring $Nord-jylland X:251 Y:66
+
+£Thy/Mors $Nord-Jylland X:82 Y:172 @Skive
+
+#Aarhus $Øst-Jylland X:274 Y:354 4 Hvid 4 Lilla 2 Grøn 2 Rød 2 Sort
+
+#Randers $Øst-Jylland X:255 Y:286 @Mariagerfjord 2 Hvid 2 Rød 1 Grøn 1 Sort
+
+£Skanderborg $Øst-Jylland X:251 Y:376 @Silkeborg @Horsens
+
+£Grenaa $Øst-Jylland X:355 Y:300
+
+£Rønde $Øst-Jylland X:304 Y:313
+
+£Brabrand $Øst-Jylland X:262 Y:354
+
+#Silkeborg $Vest-Jylland X:204 Y:354 @Skanderborg 6 hvid
+
+£Herning $Vest-Jylland X:132 Y:360
+
+£Viborg $Vest-Jylland X:187 Y:285
+
+£Skive $Vest-Jylland X:138 Y:259 @Thy/Mors
+
+£Holstebro X:85 Y:303 $Vest-Jylland
+
+#Vejle $Sydøst-Jylland X:197 Y:450 3 Hvid 2 Grøn
+
+#Kolding $Sydøst-Jylland X:186 Y:494  @HA 2 Hvid 3 Sort 2 Grøn 1 Lilla
+
+£Horsens $Sydøst-Jylland X:233 Y:416 @Skanderborg
+
+£Fredericia $Sydøst-Jylland X:206 Y:476 @Lillebælt
+
+#HA $Syd-Jylland X:176 Y:567 @Kolding 2 Hvid 2 Lilla 1 Sort
+
+#Esbjerg $Syd-Jylland X:60 Y:491 4 Hvid 2 Grøn 1 Sort 1 Lilla 1 Rød
+
+£Vejen $Syd-Jylland X:145 Y:492
+
+£Sønderborg $Syd-Jylland X:223 Y:614
+
+£Tønder $Syd-Jylland X:110 Y:609
+
+£Ribe $Syd-Jylland X:96 Y:527
+
+#Odense $Fyn X:297 Y:513 3 Hvid 4 Sort 2 Lilla 1 Grøn 1 Rød
+
+£Svendborg $Fyn X:324 Y:585
+
+£Nyborg $Fyn X:345 Y:534  @Slagelse
+
+£Lillebælt $Fyn X:219 Y:493 @Fredericia
+
+#Roskilde $Vest-Sjælland X:507 Y:462 @Køge @Valby-Vestegnen 3 Hvid 3 Lilla 1 Rød 1 Grøn
+
+#Holbæk $Vest-Sjælland X:465 Y:448 2 Hvid 3 Sort 2 Rød
+
+£Slagelse $Vest-Sjælland X:418 Y:509 @Nyborg @Næstved
+
+£Kalundborg $Vest-Sjælland X:390 Y:458
+
+#Sydhavsøerne $Sydsjælland X:433 Y:658 2 Hvid 3 Rød
+
+#Køge $Sydsjælland X:516 Y:501 @Roskilde 2 Hvid 3 Grøn 1 Lilla
+
+£Næstved $Sydsjælland X:470 Y:552 @Slagelse
+
+£Vordingborg $Sydsjælland X:486 Y:596
+
+#Hillerød $Nord-Sjælland X:530 Y:398 2 Hvid 2 Lilla 1 Grøn 1 Rød
+
+#Helsingør $Nord-Sjælland X:561 Y:375 1 Hvid 3 Grøn 2 Rød
+
+£Furesø $Nord-Sjælland X:553 Y:431 @Lyngby-Gladsaxe
+
+£Frederikssund $Nord-Sjælland X:505 Y:402
+
+#Nørrebro $Hovedstaden X:569 Y:452 3 Hvid 2 Lilla 5 Sort
+
+#Brønshøj-Vanløse $Hovedstaden X:561 Y:452 3 Hvid 2 Lilla 1 Grøn 1 Sort
+
+#København-NV $Hovedstaden X:565 Y:448 1 Hvid 3 Sort 1 Lilla 1 Grøn 1 Rød
+
+#Bornholm $Hovedstaden X:520 Y:79 2 Hvid 2 Rød
+
+#Østerbro-Hellerup $Hovedstaden X:571 Y:446 3 Hvid 3 Grøn 2 Lilla
+
+#Valby-Vestegnen $Hovedstaden X:560 Y:460 @Køge @Roskilde 2 Hvid 2 Grøn 1 Rød
+
+£Frederiksberg $Hovedstaden X:565 Y:454
+
+£Amager $Hovedstaden X:572 Y:460
+
+£Lyngby-Gladsaxe $Hovedstaden X:559 Y:441 @Furesø
