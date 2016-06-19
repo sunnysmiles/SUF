@@ -21,7 +21,7 @@ public class MoveToAarhusCard extends TimeCard {
 		aarhus.tilføjMedlem(medlem);
 		server.toAll(new JournalEntryPacket(new Entry(
 				"Et medlem er flyttet fra " + lg.getNavn() + " til Aarhus")));
-		server.toAll(new changeLokalgruppePacket(medlem.getId(), lg.getId(), aarhus.getId()));
+		server.toAll(new changeLokalgruppePacket(medlem.getID(), lg.getId(), aarhus.getId()));
 	}
 
 }

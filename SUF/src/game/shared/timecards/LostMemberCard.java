@@ -20,7 +20,7 @@ public class LostMemberCard extends TimeCard {
 		lg.fjernMedlem(m);
 		server.medlemmer.remove(m);
 		server.toAll(new JournalEntryPacket("Et medlem fra " + lg.getNavn() + " er stoppet i SUF"));
-		server.toAll(new removeMedlemPacket(m.getId()));
+		server.toAll(new removeMedlemPacket(m.getID()));
 	}
 
 }

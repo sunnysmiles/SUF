@@ -21,7 +21,7 @@ public class SkolingOrdre extends Ordre {
 			for (Medlem m : lg.getMedlemmer()) {
 				if (m.getFarve().equals("Hvid")) {
 					m.setFarve(farve);
-					server.toAll(new ChangeFarvePacket(farve, m.getId()));
+					server.toAll(new ChangeFarvePacket(farve, m.getID()));
 					server.toAll(new JournalEntryPacket(
 							"Skolingsordren virkede et hvidt medlem fra lokalgruppen " + lg.getNavn()
 									+ " har skiftet farve til " + farve));

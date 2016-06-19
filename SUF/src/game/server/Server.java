@@ -467,7 +467,7 @@ public class Server extends AbstractServer implements Parser {
 
 	public Medlem medlemFraID(int id) {
 		for (Medlem m : medlemmer) {
-			if (m.getId() == id)
+			if (m.getID() == id)
 				return m;
 		}
 		return null;

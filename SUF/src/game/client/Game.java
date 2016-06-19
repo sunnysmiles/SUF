@@ -30,8 +30,8 @@ public class Game {
 
 	private ClienGameState state = ClienGameState.PRE_START;
 	public ArrayList<By> byer;
-	public ArrayList<Medlem> medlemmer;
-	public ArrayList<Region> regioner;
+	private ArrayList<Medlem> medlemmer;
+	private ArrayList<Region> regioner;
 	private ArrayList<Lokalgruppe> lokalgrupper;
 	public ArrayList<Spiller> spillere;
 	private Journal journal;
@@ -120,7 +120,7 @@ public class Game {
 
 	private Medlem medlemFraID(int id) {
 		for (Medlem m : medlemmer) {
-			if (m.getId() == id)
+			if (m.getID() == id)
 				return m;
 		}
 		return null;
@@ -225,12 +225,20 @@ public class Game {
 		this.month = "Januar";
 		this.state = ClienGameState.ORDRER;
 		this.stats = stats;
-		this.ledelsen = new Ledelse(ledelsen, this);
+		this.ledelsen = new Ledelse(ledelsen, getMedlemmer(), getRegioner());
 		dataChangedSignal(ChangeType.GAME_STARTED);
 		sendPacket(new ClientReadyPacket());
 	}
 
 	public void changeState() {
 		dataChangedSignal(ChangeType.STATE_CHANGED);
+	}
+
+	public ArrayList<Medlem> getMedlemmer() {
+		return medlemmer;
+	}
+
+	public ArrayList<Region> getRegioner() {
+		return regioner;
 	}
 }

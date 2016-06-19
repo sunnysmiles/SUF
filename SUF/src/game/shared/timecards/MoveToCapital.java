@@ -22,7 +22,7 @@ public class MoveToCapital extends TimeCard {
 		tolg.tilføjMedlem(m);
 		server.toAll(new JournalEntryPacket("Et medlem fra " + lg.getNavn()
 				+ " lokalgruppen er flyttet til " + tolg.getNavn()));
-		server.toAll(new changeLokalgruppePacket(m.getId(), lg.getId(), tolg
+		server.toAll(new changeLokalgruppePacket(m.getID(), lg.getId(), tolg
 				.getId()));
 	}
 

@@ -18,17 +18,23 @@ public class Ledelse implements Serializable {
 	}
 
 	public Ledelse(ArrayList<Medlem> menige,
-			ArrayList<Medlem> regionsRepræsentanter, Game game) {
+			ArrayList<Medlem> regionsRepræsentanter,
+			ArrayList<Medlem> medlemsListe, ArrayList<Region> regioner) {
 		this.menige = new ArrayList<Medlem>();
 		this.regionsRepræsentanter = new ArrayList<Medlem>();
 		for (Medlem m : menige) {
-			tilføjMenigMedlem(game.medlemFraID(m.getId()));
+			for (Medlem lm : medlemsListe) {
+				if (m.getID() == lm.getID())
+					tilføjMenigMedlem(lm);
+			}
 		}
-		updateRegionsRepræsentanter(game.regioner);
+		updateRegionsRepræsentanter(regioner);
 	}
 
-	public Ledelse(Ledelse ledelse, Game game) {
-		this(ledelse.getMenige(), ledelse.getRegeionsRepræsentanter(), game);
+	public Ledelse(Ledelse ledelse, ArrayList<Medlem> medlemsListe,
+			ArrayList<Region> regioner) {
+		this(ledelse.getMenige(), ledelse.getRegeionsRepræsentanter(),
+				medlemsListe, regioner);
 	}
 
 	public Ledelse() {
@@ -45,14 +51,14 @@ public class Ledelse implements Serializable {
 	}
 
 	public int tilføjRegionsRepræsentant(Medlem m) {
-		if(!regionsRepræsentanter.contains(m)){
+		if (!regionsRepræsentanter.contains(m)) {
 			regionsRepræsentanter.add(m);
 			return 1;
 		}
 		return -1;
 	}
-	
-	public void updateRegionsRepræsentanter(ArrayList<Region> regioner){
+
+	public void updateRegionsRepræsentanter(ArrayList<Region> regioner) {
 		regionsRepræsentanter.clear();
 		for (Region r : regioner) {
 			tilføjRegionsRepræsentant(r.getRegRep());
