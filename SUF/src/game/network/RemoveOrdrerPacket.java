@@ -2,14 +2,13 @@ package game.network;
 
 import engine.network.ClientPacket;
 import game.client.Game;
+import game.client.MainView;
 import game.shared.Lokalgruppe;
 
-public class SletOrdrerPacket implements ClientPacket<Game> {
-	
+public class RemoveOrdrerPacket implements ClientPacket<MainView> {
+
 	public void parse(Game game) {
-		for(Lokalgruppe lg : game.lokalgrupper){
-			lg.sletOrdrer();
-		}
+		game.clearOrdre();
 	}
 
 }

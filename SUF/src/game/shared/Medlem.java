@@ -23,7 +23,7 @@ public class Medlem implements Serializable{
 		this.farve = farve;
 	}
 
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 

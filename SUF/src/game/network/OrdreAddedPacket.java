@@ -2,19 +2,20 @@ package game.network;
 
 import engine.network.ClientPacket;
 import game.client.Game;
+import game.client.MainView;
 
-public class OrdreTilføjetPacket implements ClientPacket<Game> {
+public class OrdreAddedPacket implements ClientPacket<MainView> {
 
 	private String navn;
 	private int lokalgruppeID;
 
-	public OrdreTilføjetPacket(String navn, int lokalgruppeID){
+	public OrdreAddedPacket(String navn, int lokalgruppeID) {
 		this.navn = navn;
 		this.lokalgruppeID = lokalgruppeID;
 	}
-	
+
 	public void parse(Game game) {
-		game.lokalgruppeFraID(lokalgruppeID).tilføjOrdre(navn);
+		game.addLokalGruppeOrdre(navn, lokalgruppeID);
 	}
 
 }

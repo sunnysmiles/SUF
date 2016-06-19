@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import engine.network.ClientPacket;
 import engine.network.ServerPacket;
 import game.client.Game;
-import game.client.Game.ClientState;
+import game.client.MainView;
 import game.client.LokalgruppeView;
 import game.client.Spiller;
 import game.server.Server;
@@ -17,7 +17,7 @@ import game.shared.Medlem;
 import game.shared.Region;
 import game.shared.Stats;
 
-public class StartGamePacket implements ClientPacket<Game> {
+public class StartGamePacket implements ClientPacket<MainView> {
 
 	private ArrayList<By> byer;
 	private ArrayList<Region> regioner;
@@ -41,19 +41,8 @@ public class StartGamePacket implements ClientPacket<Game> {
 		}
 		this.ledelsen = ledelsen;
 	}
-
 	public void parse(Game game) {
-		game.byer = byer;
-		game.medlemmer = medlemmer;
-		game.regioner = regioner;
-		game.lokalgrupper = lokalgrupper;
-		game.spillere = clientSpillere;
-		game.month = "Januar";
-		game.lgView = new LokalgruppeView(game.lokalgrupper, game);
-		game.state = ClientState.ORDRER;
-		game.stack(new ClientReadyPacket());
-		game.stats = stats;
-		game.ledelsen = new Ledelse(ledelsen, game);
+		game.startGame(byer, medlemmer, regioner, lokalgrupper, clientSpillere, stats, ledelsen);
 	}
 
 }

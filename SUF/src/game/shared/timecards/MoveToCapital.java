@@ -1,7 +1,7 @@
 package game.shared.timecards;
 
 import game.network.JournalEntryPacket;
-import game.network.skiftLokalgruppePacket;
+import game.network.changeLokalgruppePacket;
 import game.server.Server;
 import game.shared.Lokalgruppe;
 import game.shared.Medlem;
@@ -22,7 +22,7 @@ public class MoveToCapital extends TimeCard {
 		tolg.tilføjMedlem(m);
 		server.toAll(new JournalEntryPacket("Et medlem fra " + lg.getNavn()
 				+ " lokalgruppen er flyttet til " + tolg.getNavn()));
-		server.toAll(new skiftLokalgruppePacket(m.getId(), lg.getId(), tolg
+		server.toAll(new changeLokalgruppePacket(m.getID(), lg.getId(), tolg
 				.getId()));
 	}
 

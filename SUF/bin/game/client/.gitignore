@@ -16,3 +16,14 @@
 /Test.class
 /ViewItem$1.class
 /ViewItem.class
+/MainView$1.class
+/MainView$2.class
+/MainView$3.class
+/MainView$ClientState.class
+/MainView.class
+/MainView$ClienGametState.class
+/Game$ClienGametState.class
+/Game$ClienGameState.class
+/DataChangedListener.class
+/DataChangedListener$ClienGameState.class
+/DataChangedListener$ChangeType.class

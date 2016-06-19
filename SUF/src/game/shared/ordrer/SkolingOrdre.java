@@ -2,7 +2,7 @@ package game.shared.ordrer;
 
 import engine.utils.Util;
 import game.network.JournalEntryPacket;
-import game.network.SkiftFarvePacket;
+import game.network.ChangeFarvePacket;
 import game.server.Server;
 import game.server.ServerSpiller;
 import game.shared.Lokalgruppe;
@@ -21,7 +21,7 @@ public class SkolingOrdre extends Ordre {
 			for (Medlem m : lg.getMedlemmer()) {
 				if (m.getFarve().equals("Hvid")) {
 					m.setFarve(farve);
-					server.toAll(new SkiftFarvePacket(farve, m.getId()));
+					server.toAll(new ChangeFarvePacket(farve, m.getID()));
 					server.toAll(new JournalEntryPacket(
 							"Skolingsordren virkede et hvidt medlem fra lokalgruppen " + lg.getNavn()
 									+ " har skiftet farve til " + farve));

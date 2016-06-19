@@ -19,12 +19,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class MedlemmerView extends JFrame {
-	private Game game;
+	private MainView game;
 	private Lokalgruppe lg;
 	private JScrollPane listScroller;
 	private JPanel panel;
 
-	public MedlemmerView(Game game) {
+	public MedlemmerView(MainView game) {
 		this.game = game;
 	}
 

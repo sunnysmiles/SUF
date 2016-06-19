@@ -1,10 +1,12 @@
 package game.network;
 
 import engine.network.ClientPacket;
+import game.client.DataChangedListener.ChangeType;
 import game.client.Game;
+import game.client.MainView;
 import game.shared.Entry;
 
-public class JournalEntryPacket implements ClientPacket<Game>{
+public class JournalEntryPacket implements ClientPacket<MainView>{
 
 	private Entry entry;
 	
@@ -17,8 +19,7 @@ public class JournalEntryPacket implements ClientPacket<Game>{
 	}
 
 	public void parse(Game game) {
-		game.journal.getCurrentEntry().addEntry(entry);
-		game.journalView.update();
+		game.addJournalEntry(entry);
 	}
 
 }

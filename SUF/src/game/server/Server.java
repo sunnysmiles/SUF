@@ -16,9 +16,9 @@ import engine.server.AbstractServerPlayer;
 import engine.server.Parser;
 import engine.server.PlayerConnection;
 import engine.utils.Util;
-import game.client.Game;
+import game.client.MainView;
 import game.network.JournalMonthPacket;
-import game.network.OrdreTilføjetPacket;
+import game.network.OrdreAddedPacket;
 import game.network.SetFarvePacket;
 import game.network.StartGamePacket;
 import game.network.StateChangePacket;
@@ -119,7 +119,7 @@ public class Server extends AbstractServer implements Parser {
 			sp.udførOrder(this);
 		}
 		for (Lokalgruppe lg : lokalgrupper) {
-			toAll(new OrdreTilføjetPacket("Ingen", lg.getId()));
+			toAll(new OrdreAddedPacket("Ingen", lg.getId()));
 		}
 	}
 
@@ -281,7 +281,7 @@ public class Server extends AbstractServer implements Parser {
 		return null;
 	}
 
-	public void toAll(ClientPacket<Game> packet) {
+	public void toAll(ClientPacket<MainView> packet) {
 		for (ServerSpiller sp : serverSpillere) {
 			sp.stack(packet);
 		}
@@ -467,7 +467,7 @@ public class Server extends AbstractServer implements Parser {
 
 	public Medlem medlemFraID(int id) {
 		for (Medlem m : medlemmer) {
-			if (m.getId() == id)
+			if (m.getID() == id)
 				return m;
 		}
 		return null;

@@ -11,3 +11,10 @@
 /StateChangePacket.class
 /mistetMedlemPacket.class
 /skiftLokalgruppePacket.class
+/NytMedlemPacket.class
+/NewMedlemPacket.class
+/removeMedlemPacket.class
+/OrdreAddedPacket.class
+/ChangeFarvePacket.class
+/changeLokalgruppePacket.class
+/RemoveOrdrerPacket.class
