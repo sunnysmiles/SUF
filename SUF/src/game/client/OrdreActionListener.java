@@ -9,22 +9,18 @@ import java.awt.event.ActionListener;
 public class OrdreActionListener implements ActionListener {
 
 	private Ordre ordre;
-	private MainView game;
+	private MainView mainView;
 
-	public OrdreActionListener(Ordre ordre, MainView game) {
+	public OrdreActionListener(Ordre ordre, MainView mainView) {
 		this.ordre = ordre;
-		this.game = game;
+		this.mainView = mainView;
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if(!game.farve.equals(game.lokalgruppeFraID(ordre.getLokalgruppeID()).getFarve()))
-			return;
-		game.getConnection().stack(new OrdrePacket(ordre));
-		game.lokalgruppeFraID(ordre.getLokalgruppeID()).tilføjOrdre(
-				ordre.getName());
-		game.lgView.update();
-		if(game.medlemView.isVisible()){
-			game.medlemView.update();
+		mainView.getGame().addOrdre(ordre);
+		mainView.lgView.update();
+		if(mainView.medlemView.isVisible()){
+			mainView.medlemView.update();
 		}
 	}
 

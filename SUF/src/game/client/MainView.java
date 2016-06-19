@@ -4,36 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import engine.client.AbstractGame;
-import engine.client.Connection;
-import engine.network.ServerPacket;
-import engine.utils.Input;
 import engine.utils.Screen;
 import engine.utils.SquareIcon;
 import engine.utils.SunnyFrame;
-import game.network.ClientReadyPacket;
-import game.server.Server;
-import game.server.ServerSpiller;
-import game.shared.By;
-import game.shared.Journal;
-import game.shared.Ledelse;
 import game.shared.Lokalgruppe;
-import game.shared.Medlem;
-import game.shared.MonthEntry;
-import game.shared.Region;
-import game.shared.Stats;
+import game.shared.By;
 
-public class MainView extends AbstractGame {
+public class MainView extends AbstractGame implements DataChangedListener{
 	private Art art;
-	private Input input;
 	private Screen screen;
 	public JournalView journalView;
 	public LokalgruppeView lgView;
@@ -53,7 +38,6 @@ public class MainView extends AbstractGame {
 			System.out.println("Failed loading the art");
 			e.printStackTrace();
 		}
-		input = getInput();
 		screen = getScreen();
 		journalView = new JournalView(game.getJournal());
 		// Buttons
@@ -91,7 +75,6 @@ public class MainView extends AbstractGame {
 				journalView.open();
 			}
 		});
-		final MainView game = this;
 		lgButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// if (lokalgrupper != null)
@@ -143,5 +126,19 @@ public class MainView extends AbstractGame {
 
 	public static void main(String[] args) {
 		new SunnyFrame(new MainView());
+	}
+
+	public Game getGame() {
+		return game;
+	}
+
+	public void DataChanged(ChangeType type) {
+		switch(type){
+		case JOURNAL_ENTRY:
+			journalView.update();
+			break;
+		default:
+			break;
+		}
 	}
 }

@@ -24,3 +24,6 @@
 /MainView$ClienGametState.class
 /Game$ClienGametState.class
 /Game$ClienGameState.class
+/DataChangedListener.class
+/DataChangedListener$ClienGameState.class
+/DataChangedListener$ChangeType.class

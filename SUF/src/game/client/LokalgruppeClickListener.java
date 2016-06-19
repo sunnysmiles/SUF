@@ -1,6 +1,6 @@
 package game.client;
 
-import game.client.MainView.ClienGametState;
+import game.client.Game.ClienGameState;
 import game.shared.Lokalgruppe;
 import game.shared.ordrer.HvervningsOrdre;
 import game.shared.ordrer.SkolingOrdre;
@@ -12,54 +12,48 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 public class LokalgruppeClickListener implements MouseListener {
-	private MainView game;
+	private MainView mainView;
 
-	public LokalgruppeClickListener(MainView game) {
-		this.game = game;
+	public LokalgruppeClickListener(MainView mainView) {
+		this.mainView = mainView;
 	}
 
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() != MouseEvent.BUTTON3)
 			return;
-		if (game.state != ClienGameState.ORDRER)
+		//Check if in command-state
+		if (mainView.getGame().getState() != ClienGameState.ORDRER)
 			return;
-		for (Lokalgruppe lg : game.lokalgrupper) {
-			int x = (int) Math.floor((float) (lg.getX() + game.offSet)
-					* ((float) game.getCanvas().getWidth() / 1300f));
-			int y = (int) Math.floor((float) lg.getY()
-					* ((float) game.getCanvas().getHeight() / 700f));
-
-			if (lg.getNavn().equals("Sydhavsøerne"))
-				System.out.println(x + " " + e.getX() + " " + y + " "
-						+ e.getY());
-			if (!lg.getFarve().equals(game.farve))
+		//Iterate over all lokalgrupper
+		for (Lokalgruppe lg : mainView.getGame().getLokalgrupper()) {
+			//Check if the lokalgruppe belongs to us 
+			if (!lg.getFarve().equals(mainView.getGame().getFarve()))
 				continue;
-
+			
+			//Calculate the real X and Y coordinates
+			int x = (int) Math.floor((float) (lg.getX() + mainView.offSet)
+					* ((float) mainView.getCanvas().getWidth() / 1300f));
+			int y = (int) Math.floor((float) lg.getY()
+					* ((float) mainView.getCanvas().getHeight() / 700f));
+			
+			//Check if the lokalgruppe is clicked
 			if (e.getX() >= x && e.getX() <= x + 10)
 				if (e.getY() >= y && e.getY() <= y + 10) {
-					new LokalgruppePopup(lg, game, e, true);
+					new LokalgruppePopup(lg, mainView, e, true);
 				}
 		}
 	}
 
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

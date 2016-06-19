@@ -2,10 +2,13 @@ package game.client;
 
 import engine.client.Connection;
 import engine.network.ServerPacket;
+import game.client.DataChangedListener.ChangeType;
 import game.network.ClientReadyPacket;
+import game.network.OrdrePacket;
 import game.server.Server;
 import game.server.ServerSpiller;
 import game.shared.By;
+import game.shared.Entry;
 import game.shared.Journal;
 import game.shared.Ledelse;
 import game.shared.Lokalgruppe;
@@ -13,6 +16,7 @@ import game.shared.Medlem;
 import game.shared.MonthEntry;
 import game.shared.Region;
 import game.shared.Stats;
+import game.shared.ordrer.Ordre;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,8 +25,8 @@ public class Game {
 	public enum ClienGameState {
 		PRE_START, ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_FORSLAG, LEDELSE_KOO_VALG
 	};
-	
-	public ClienGameState state = ClienGameState.PRE_START;
+
+	private ClienGameState state = ClienGameState.PRE_START;
 	public ArrayList<By> byer;
 	public ArrayList<Medlem> medlemmer;
 	public ArrayList<Region> regioner;
@@ -30,21 +34,22 @@ public class Game {
 	public ArrayList<Spiller> spillere;
 	private Journal journal;
 	public String month;
-	public String farve;
+	private String farve;
 	public Stats stats;
 	public Ledelse ledelsen;
 	private Connection connection;
 	private int missingBeatPackets = 0;
 	private boolean running = true;
-	
-	public Game(){
+	private ArrayList<DataChangedListener> dataListeners;
+
+	public Game() {
 		connection = new Connection();
 		new Thread(connection).start();
 		journal = new Journal();
 		journal.addEntry(new MonthEntry("Januar"));
 		state = ClienGameState.PRE_START;
 	}
-	
+
 	public void update() {
 		fromServer();
 		switch (state) {
@@ -58,6 +63,13 @@ public class Game {
 			break;
 		}
 	}
+
+	public void addOrdre(Ordre ordre) {
+		if (farve.equals(lokalgruppeFraID(ordre.getLokalgruppeID()).getFarve()))
+			return;
+		sendPacket(new OrdrePacket(ordre));
+		lokalgruppeFraID(ordre.getLokalgruppeID()).tilføjOrdre(ordre.getName());
+	}
 	
 	private void fromServer() {
 		missingBeatPackets++;
@@ -67,23 +79,22 @@ public class Game {
 			stopGame();
 		}
 	}
-	
-	public void sendPacket(ServerPacket<Server, ServerSpiller> packet){
+
+	public void sendPacket(ServerPacket<Server, ServerSpiller> packet) {
 		connection.stack(packet);
 		sendData();
 	}
-	
+
 	public void stack(ServerPacket<Server, ServerSpiller> packet) {
 		connection.stack(packet);
 	}
-	
-	public void sendData(){
+
+	public void sendData() {
 		try {
 			connection.sendData();
 		} catch (IOException e) {
 			System.out.println("Problem sending data");
-			if (e.getMessage().startsWith(
-					"Connection reset by peer:")) {
+			if (e.getMessage().startsWith("Connection reset by peer:")) {
 				System.out
 						.println("Lost connection to server, game terminated");
 				stopGame();
@@ -92,32 +103,31 @@ public class Game {
 				System.out.println("Problem sending data");
 		}
 	}
-	
-	public void stopGame(){
-		running  = false;
+
+	public void stopGame() {
+		running = false;
 	}
-	
-	public Journal getJournal(){
+
+	public Journal getJournal() {
 		return journal;
 	}
-	
-	public void ready(){
+
+	public void ready() {
 		sendPacket(new ClientReadyPacket());
 	}
-	
-	
+
 	public void clearHeartBeats() {
 		missingBeatPackets = 0;
 	}
-	
-	public ArrayList<Lokalgruppe> getLokalgrupper(){
+
+	public ArrayList<Lokalgruppe> getLokalgrupper() {
 		return lokalgrupper;
 	}
-	
-	public ArrayList<By> getByer(){
+
+	public ArrayList<By> getByer() {
 		return byer;
 	}
-	
+
 	public Medlem medlemFraID(int id) {
 		for (Medlem m : medlemmer) {
 			if (m.getId() == id)
@@ -148,5 +158,28 @@ public class Game {
 				return by;
 		}
 		return null;
+	}
+
+	public ClienGameState getState() {
+		return state;
+	}
+
+	public String getFarve() {
+		return farve;
+	}
+	
+	public void addDataListener(DataChangedListener listener){
+		dataListeners.add(listener);
+	}
+	
+	public void dataChangedSignal(ChangeType type){
+		for(DataChangedListener listener : dataListeners){
+			listener.DataChanged(type);
+		}
+	}
+
+	public void addJournalEntry(Entry entry) {
+		journal.getCurrentEntry().addEntry(entry);
+		dataChangedSignal(ChangeType.JOURNAL_ENTRY);
 	}
 }
