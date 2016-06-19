@@ -9,9 +9,9 @@ import java.awt.event.ActionListener;
 public class OrdreActionListener implements ActionListener {
 
 	private Ordre ordre;
-	private Game game;
+	private MainView game;
 
-	public OrdreActionListener(Ordre ordre, Game game) {
+	public OrdreActionListener(Ordre ordre, MainView game) {
 		this.ordre = ordre;
 		this.game = game;
 	}

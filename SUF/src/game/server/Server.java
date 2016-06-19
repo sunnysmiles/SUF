@@ -16,7 +16,7 @@ import engine.server.AbstractServerPlayer;
 import engine.server.Parser;
 import engine.server.PlayerConnection;
 import engine.utils.Util;
-import game.client.Game;
+import game.client.MainView;
 import game.network.JournalMonthPacket;
 import game.network.OrdreTilføjetPacket;
 import game.network.SetFarvePacket;
@@ -281,7 +281,7 @@ public class Server extends AbstractServer implements Parser {
 		return null;
 	}
 
-	public void toAll(ClientPacket<Game> packet) {
+	public void toAll(ClientPacket<MainView> packet) {
 		for (ServerSpiller sp : serverSpillere) {
 			sp.stack(packet);
 		}

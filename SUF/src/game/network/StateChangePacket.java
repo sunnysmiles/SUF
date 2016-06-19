@@ -8,9 +8,9 @@ import engine.network.ClientPacket;
 import engine.utils.SquareIcon;
 import game.client.*;
 
-public class StateChangePacket implements ClientPacket<Game> {
+public class StateChangePacket implements ClientPacket<MainView> {
 
-	public void parse(Game game) {
+	public void parse(MainView game) {
 		game.iconLabel.setIcon(new SquareIcon(Color.red));
 	}
 

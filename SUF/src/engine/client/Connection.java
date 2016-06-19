@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import engine.network.ClientPacket;
 import engine.network.ServerPacket;
+import game.client.Game;
 
 public class Connection implements Runnable {
 	Socket con;
@@ -66,7 +67,7 @@ public class Connection implements Runnable {
 	}
 	
 	
-	public synchronized void parse(AbstractGame game){
+	public synchronized void parse(Game game){
 		for(ClientPacket p : recievedPackets)
 			p.parse(game);
 		clearRecievedPackets();

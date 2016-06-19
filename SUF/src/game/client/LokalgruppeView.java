@@ -26,11 +26,11 @@ import javax.swing.JScrollPane;
 
 public class LokalgruppeView extends JFrame {
 	private ArrayList<Lokalgruppe> grupper;
-	private Game game;
+	private MainView game;
 	private JPanel panel;
 	private JScrollPane listScroller;
 
-	public LokalgruppeView(ArrayList<Lokalgruppe> grupper, Game game) {
+	public LokalgruppeView(ArrayList<Lokalgruppe> grupper, MainView game) {
 		this.grupper = grupper;
 		this.game = game;
 		update();

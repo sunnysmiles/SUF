@@ -1,6 +1,6 @@
 package game.shared;
 
-import game.client.Game;
+import game.client.MainView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class Ledelse implements Serializable {
 	}
 
 	public Ledelse(ArrayList<Medlem> menige,
-			ArrayList<Medlem> regionsRepræsentanter, Game game) {
+			ArrayList<Medlem> regionsRepræsentanter, MainView game) {
 		this.menige = new ArrayList<Medlem>();
 		this.regionsRepræsentanter = new ArrayList<Medlem>();
 		for (Medlem m : menige) {
@@ -26,7 +26,7 @@ public class Ledelse implements Serializable {
 		updateRegionsRepræsentanter(game.regioner);
 	}
 
-	public Ledelse(Ledelse ledelse, Game game) {
+	public Ledelse(Ledelse ledelse, MainView game) {
 		this(ledelse.getMenige(), ledelse.getRegeionsRepræsentanter(), game);
 	}
 

@@ -1,6 +1,6 @@
 package game.client;
 
-import game.client.Game.ClientState;
+import game.client.MainView.ClienGametState;
 import game.shared.Lokalgruppe;
 import game.shared.ordrer.HvervningsOrdre;
 import game.shared.ordrer.SkolingOrdre;
@@ -12,16 +12,16 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 public class LokalgruppeClickListener implements MouseListener {
-	private Game game;
+	private MainView game;
 
-	public LokalgruppeClickListener(Game game) {
+	public LokalgruppeClickListener(MainView game) {
 		this.game = game;
 	}
 
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() != MouseEvent.BUTTON3)
 			return;
-		if (game.state != ClientState.ORDRER)
+		if (game.state != ClienGameState.ORDRER)
 			return;
 		for (Lokalgruppe lg : game.lokalgrupper) {
 			int x = (int) Math.floor((float) (lg.getX() + game.offSet)

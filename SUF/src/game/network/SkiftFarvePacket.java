@@ -1,9 +1,9 @@
 package game.network;
 
 import engine.network.ClientPacket;
-import game.client.Game;
+import game.client.MainView;
 
-public class SkiftFarvePacket implements ClientPacket<Game> {
+public class SkiftFarvePacket implements ClientPacket<MainView> {
 	
 	private String farve;
 	private int medlemID;
@@ -13,7 +13,7 @@ public class SkiftFarvePacket implements ClientPacket<Game> {
 		this.medlemID = medlemID;
 	}
 	
-	public void parse(Game game) {
+	public void parse(MainView game) {
 		game.medlemFraID(medlemID).setFarve(farve);
 	}
 

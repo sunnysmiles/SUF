@@ -6,7 +6,7 @@ import engine.network.ClientPacket;
 import engine.network.HeartBeatPacket;
 import engine.server.AbstractServerPlayer;
 import engine.server.PlayerConnection;
-import game.client.Game;
+import game.client.MainView;
 import game.network.OrdreTilføjetPacket;
 import game.shared.Lokalgruppe;
 import game.shared.ordrer.Ordre;

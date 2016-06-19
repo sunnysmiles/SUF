@@ -12,7 +12,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 public class LokalgruppePopup extends JPopupMenu {
-	public LokalgruppePopup(Lokalgruppe listenerLG, Game game, MouseEvent e,
+	public LokalgruppePopup(Lokalgruppe listenerLG, MainView game, MouseEvent e,
 			boolean visDetaljer) {
 		JMenuItem hvervning = new JMenuItem("Hvervning");
 
@@ -34,7 +34,7 @@ public class LokalgruppePopup extends JPopupMenu {
 }
 
 class ViewItem extends JMenuItem {
-	public ViewItem(final Lokalgruppe lg, final Game game) {
+	public ViewItem(final Lokalgruppe lg, final MainView game) {
 		super("Detaljer");
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

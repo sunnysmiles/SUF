@@ -1,7 +1,7 @@
 package game.shared.timecards;
 
 import engine.network.ClientPacket;
-import game.client.Game;
+import game.client.MainView;
 import game.network.JournalEntryPacket;
 import game.network.mistetMedlemPacket;
 import game.server.Server;

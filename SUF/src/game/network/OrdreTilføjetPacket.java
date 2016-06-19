@@ -1,9 +1,9 @@
 package game.network;
 
 import engine.network.ClientPacket;
-import game.client.Game;
+import game.client.MainView;
 
-public class OrdreTilføjetPacket implements ClientPacket<Game> {
+public class OrdreTilføjetPacket implements ClientPacket<MainView> {
 
 	private String navn;
 	private int lokalgruppeID;
@@ -13,7 +13,7 @@ public class OrdreTilføjetPacket implements ClientPacket<Game> {
 		this.lokalgruppeID = lokalgruppeID;
 	}
 	
-	public void parse(Game game) {
+	public void parse(MainView game) {
 		game.lokalgruppeFraID(lokalgruppeID).tilføjOrdre(navn);
 	}
 

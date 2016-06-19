@@ -1,9 +1,9 @@
 package game.network;
 
 import engine.network.ClientPacket;
-import game.client.Game;
+import game.client.MainView;
 
-public class skiftLokalgruppePacket implements ClientPacket<Game> {
+public class skiftLokalgruppePacket implements ClientPacket<MainView> {
 
 	private int medlemID;
 	private int lokalgruppe1ID;
@@ -13,7 +13,7 @@ public class skiftLokalgruppePacket implements ClientPacket<Game> {
 		this.lokalgruppe1ID = lokalgruppe1ID;
 		this.lokalgruppe2ID = lokalgruppe2ID;
 	}
-	public void parse(Game game) {
+	public void parse(MainView game) {
 		game.lokalgruppeFraID(lokalgruppe1ID).fjernMedlem(game.medlemFraID(medlemID));
 		game.lokalgruppeFraID(lokalgruppe2ID).tilføjMedlem(game.medlemFraID(medlemID));
 	}

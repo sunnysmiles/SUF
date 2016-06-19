@@ -1,10 +1,10 @@
 package game.network;
 
 import engine.network.ClientPacket;
-import game.client.Game;
+import game.client.MainView;
 import game.shared.Medlem;
 
-public class NytMedlemPakke implements ClientPacket<Game> {
+public class NytMedlemPakke implements ClientPacket<MainView> {
 	
 	private Medlem medlem;
 	private int lokalgruppeID;
@@ -14,7 +14,7 @@ public class NytMedlemPakke implements ClientPacket<Game> {
 		this.lokalgruppeID = lokalgruppeID;
 	}
 	
-	public void parse(Game game) {
+	public void parse(MainView game) {
 		game.lokalgruppeFraID(lokalgruppeID).tilføjMedlem(medlem);;
 		game.medlemmer.add(medlem);
 	}
