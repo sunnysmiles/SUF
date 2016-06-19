@@ -23,7 +23,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Game {
+public class Game implements Runnable {
 	public enum ClienGameState {
 		PRE_START, ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_FORSLAG, LEDELSE_KOO_VALG
 	};
@@ -51,9 +51,29 @@ public class Game {
 		journal.addEntry(new MonthEntry("Januar"));
 		state = ClienGameState.PRE_START;
 		dataListeners = new ArrayList<DataChangedListener>();
-		
+
 	}
-	
+
+	private void fromServer() {
+		// missingBeatPackets++;
+		connection.parse(this);
+		if (missingBeatPackets > 2000) {
+			System.out.println("Server unresponsive");
+			stopGame();
+		}
+	}
+
+	public void run() {
+		while (running) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			fromServer();
+		}
+	}
+
 	public void addOrdre(Ordre ordre) {
 		if (state != ClienGameState.ORDRER)
 			return;
@@ -61,15 +81,6 @@ public class Game {
 			return;
 		sendPacket(new OrdrePacket(ordre));
 		lokalgruppeFraID(ordre.getLokalgruppeID()).tilføjOrdre(ordre.getName());
-	}
-
-	private void fromServer() {
-		missingBeatPackets++;
-		connection.parse(this);
-		if (missingBeatPackets > 2000) {
-			System.out.println("Server unresponsive");
-			stopGame();
-		}
 	}
 
 	public void sendPacket(ServerPacket<Server, ServerSpiller> packet) {
@@ -218,7 +229,7 @@ public class Game {
 	public void startGame(ArrayList<By> byer, ArrayList<Medlem> medlemmer,
 			ArrayList<Region> regioner, ArrayList<Lokalgruppe> lokalgrupper,
 			ArrayList<Spiller> clientSpillere, Stats stats, Ledelse ledelsen) {
-		
+
 		this.byer = byer;
 		this.medlemmer = medlemmer;
 		this.regioner = regioner;

@@ -31,6 +31,7 @@ public class MainView extends AbstractGame implements DataChangedListener{
 	public void init() {
 		game = new Game();
 		game.addDataListener(this);
+		new Thread(game).start();;
 		offSet = 0;
 		missingBeatPackets = 0;
 		art = new Art();
