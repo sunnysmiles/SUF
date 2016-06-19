@@ -21,7 +21,7 @@ public class FirstTest {
 	
 	public static void waits(){
 		try {
-			Thread.sleep(20);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

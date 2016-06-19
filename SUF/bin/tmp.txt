@@ -1,0 +1,99 @@
+#Aalborg $Nord-jylland X:216 Y:110 @Aarhus 2 Hvid 4 Rød 2 Lilla 2 Sort
+
+#MariagerFjord $Nord-jylland 3 Hvid 2 Rød
+
+£Hjørring $Nord-jylland X:251 Y:77 @Aarhus
+
+#Aarhus $Øst-Jylland 4 Hvid 4 Lilla 2 Grøn 2 Rød 2 Sort
+
+#Randers $Øst-Jylland 2 Hvid 2 Rød 1 Grøn 1 Sort
+
+£Skanderborg $Øst-Jylland
+
+£Grenaa $Øst-Jylland
+
+£Rønde $Øst-Jylland
+
+£Brabrand $Øst-Jylland
+
+#Silkeborg $Vest-Jylland 6 hvid
+
+£Herning $Vest-Jylland
+
+£Viborg $Vest-Jylland
+
+£Skive $Vest-Jylland
+
+£Holstebro $Vest-Jylland
+
+£Thyborøn $Vest-Jylland
+
+#Vejle $Sydøst-Jylland 3 Hvid 2 Grøn
+
+#Kolding $Sydøst-Jylland 2 Hvid 3 Sort 2 Grøn 1 Lilla
+
+£Horsens $Sydøst-Jylland
+
+£Fredericia $Sydøst-Jylland
+
+#HA $Syd-Jylland 2 Hvid 2 Lilla 1 Sort
+
+#Esbjerg $Syd-Jylland 4 Hvid 2 Grøn 1 Sort 1 Lilla 1 Rød
+
+£Vejen $Syd-Jylland
+
+£Sønderborg $Syd-Jylland
+
+£Tønder $Syd-Jylland
+
+£Ribe $Syd-Jylland
+
+#Odense $Fyn 3 Hvid 4 Sort 2 Lilla 1 Grøn 1 Rød
+
+£Svenborg $Fyn
+
+£Fåborg $Fyn 
+
+£Lillebælt $Fyn  
+
+#Roskilde $Vest-Sjælland 3 Hvid 3 Lilla 1 Rød 1 Grøn
+
+#Holbæk $Vest-Sjælland 2 Hvid 3 Sort 2 Rød
+
+£Slagelse $Vest-Sjælland
+
+£Kalundborg $Vest-Sjælland
+
+#Sydhavsøerne $Sydsjælland 2 Hvid 3 Rød
+
+#Køge $Sydsjælland 2 Hvid 3 Grøn 1 Lilla
+
+£Næstved $Sydsjælland
+
+£Vordingborg $Sydsjælland
+
+#Hillerød $Nord-Sjælland 2 Hvid 2 Lilla 1 Grøn 1 Rød
+
+#Helsingør $Nord-Sjælland 1 Hvid 3 Grøn 2 Rød
+
+£Furesø $Nord-Sjælland
+
+£Frederikssund $Nord-Sjælland
+
+#Nørrebro $Hovedstaden 3 Hvid 2 Lilla 5 Sort
+
+#Brønshøj-Vanløse $Hovedstaden 3 Hvid 2 Lilla 1 Grøn 1 Sort
+
+#København-NV $Hovedstaden 1 Hvid 3 Sort 1 Lilla 1 Grøn 1 Rød
+
+#Bornholm $Hovedstaden 2 Hvid 2 Rød
+
+#Østerbro-Hellerup $Hovedstaden 3 Hvid 3 Grøn 2 Lilla
+
+#Valby-Vestegnen $Hovedstaden 2 Hvid 2 Grøn 1 Rød
+
+£Frederiksberg $Hovedstaden
+
+£Amager $Hovedstaden
+
+£Lyngby $Hovedstaden

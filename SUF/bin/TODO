@@ -1,0 +1,15 @@
+Implement a Non-deterministic Randomizer for server
+Implement a deterministic Randomizer for server
+Implement J-UNIT tests for the current features
+Manually test that the views update correctly
+
+
+
+GAMMELT
+Initialiser ledelsen
+Lav en Struktur for Koo
+Lav et display for ledelsen
+Lav et display for koo
+Afgør hvordan ledelse og koo er initialiseret
+Lav en rutine for koo
+Lav en rutine for ledelsen

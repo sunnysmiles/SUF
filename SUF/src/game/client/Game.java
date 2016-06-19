@@ -36,7 +36,7 @@ public class Game implements Runnable {
 	public ArrayList<Spiller> spillere;
 	private Journal journal;
 	public String month;
-	private String farve;
+	public String farve;
 	public Stats stats;
 	public Ledelse ledelsen;
 	private Connection connection;
