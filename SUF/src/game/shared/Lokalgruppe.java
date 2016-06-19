@@ -44,9 +44,6 @@ public class Lokalgruppe implements Serializable {
 		this.navn = navn;
 	}
 
-	public Medlem tilfældigMedlem() {
-		return getMedlemmer().get(Util.getRandom(0, getMedlemmer().size()));
-	}
 
 	public void fjernMedlem(Medlem medlem) {
 		getMedlemmer().remove(medlem);
@@ -177,20 +174,5 @@ public class Lokalgruppe implements Serializable {
 
 	public String getOrdre() {
 		return ordre;
-	}
-	
-	//Returnere null hvis gruppen ikke indeholder medlemmer af farven
-	public Medlem tilfældigMedlemAfFarve(String farve) {
-		Medlem m = null;
-		for(Medlem med : medlemmer){
-			if(med.getFarve().equals(farve))
-				m = med;
-		}
-		if(m == null)
-			return m;
-		do {
-			m = medlemmer.get(Util.getRandom(0, medlemmer.size()));
-		} while (!m.getFarve().equals(farve));
-		return m;
 	}
 }

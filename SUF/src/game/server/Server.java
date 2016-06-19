@@ -484,4 +484,8 @@ public class Server extends AbstractServer implements Parser {
 		}
 		return null;
 	}
+	
+	public ArrayList<Lokalgruppe> getLokalgrupper(){
+		return lokalgrupper;
+	}
 }

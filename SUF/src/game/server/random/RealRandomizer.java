@@ -102,4 +102,32 @@ public class RealRandomizer implements Randomizer {
 	public boolean changeFarveOrdreSuccess() {
 		return (getRandom(1,3) == 2);
 	}
+
+	public Lokalgruppe getLostMemberCardLG(ArrayList<Lokalgruppe> lokalgrupper) {
+		return this.randomLokalgruppe(lokalgrupper);
+	}
+
+	private Medlem randomMedlem(Lokalgruppe lg) {
+		return lg.getMedlemmer().get(getRandom(0, lg.getMedlemmer().size()));
+	}
+	
+	//Returns null if no member farve
+	//TODO Rewrite to be more sensical
+	public Medlem randomMemberOfLokalgruppeFarve(String farve, Lokalgruppe lg) {
+		Medlem m = null;
+		for(Medlem med : lg.getMedlemmer()){
+			if(med.getFarve().equals(farve))
+				m = med;
+		}
+		if(m == null)
+			return m;
+		do {
+			m = lg.getMedlemmer().get(getRandom(0, lg.getMedlemmer().size()));
+		} while (!m.getFarve().equals(farve));
+		return m;
+	}
+
+	public Medlem getLostMemberCardMedlem(Lokalgruppe lg) {
+		return randomMedlem(lg);
+	}
 }

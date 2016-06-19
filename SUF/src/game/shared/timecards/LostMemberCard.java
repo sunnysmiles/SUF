@@ -15,8 +15,8 @@ public class LostMemberCard extends TimeCard {
 	}
 
 	public void action(Server server) {
-		Lokalgruppe lg = server.tilfældigLokalgruppe();
-		Medlem m = lg.tilfældigMedlem();
+		Lokalgruppe lg = server.randomizer.getLostMemberCardLG(server.getLokalgrupper());
+		Medlem m = server.randomizer.getLostMemberCardMedlem(lg);
 		lg.fjernMedlem(m);
 		server.medlemmer.remove(m);
 		server.toAll(new JournalEntryPacket("Et medlem fra " + lg.getNavn() + " er stoppet i SUF"));
