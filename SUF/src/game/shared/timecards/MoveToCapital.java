@@ -14,10 +14,10 @@ public class MoveToCapital extends TimeCard {
 	}
 
 	public void action(Server server) {
-		Lokalgruppe lg = server.tilfældigLokalgruppe();
+		Lokalgruppe lg = server.randomizer.getMoveCapitalCardFromLG(server.getLokalgrupper());
 		Region reg = server.regionFraNavn("Hovedstaden");
-		Lokalgruppe tolg = reg.tilfældigLokalgruppe();
-		Medlem m = lg.tilfældigMedlem();
+		Lokalgruppe tolg = server.randomizer.getMoveCapitalCardToLG(reg);
+		Medlem m = server.randomizer.getMoveCapitalCardMedlem(lg);
 		lg.fjernMedlem(m);
 		tolg.tilføjMedlem(m);
 		server.toAll(new JournalEntryPacket("Et medlem fra " + lg.getNavn()

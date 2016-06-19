@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import engine.utils.Util;
+import game.server.random.Randomizer;
 
 public class Region implements Serializable {
 	private String navn;
@@ -41,12 +42,6 @@ public class Region implements Serializable {
 		return lokalgrupper;
 	}
 
-	public Lokalgruppe tilfældigLokalgruppe() {
-		if (lokalgrupper.size() > 0)
-			return lokalgrupper.get(Util.getRandom(0, lokalgrupper.size()));
-		return null;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -76,7 +71,7 @@ public class Region implements Serializable {
 
 	// Snak med Malte om valg af regrepere, og lav en implementation der ikke er
 	// retarderet
-	public void setRegRep() {
+	public void setRegRep(Randomizer randomizer) {
 		int r, g, s, l;
 		r = g = s = l = 0;
 		for (Lokalgruppe lg : lokalgrupper) {
@@ -101,32 +96,11 @@ public class Region implements Serializable {
 		else if (l > r && l > g && l > s)
 			farve = "Lilla";
 		if (farve != null) {
-			this.regRep = tilfældigMedlemAfFarve(farve);
+			this.regRep = randomizer.memberForSetRegRep(this, farve);
 			return;
 		} else if(this.regRep == null){
-			this.regRep = tilfældigMedlemAfFarve("Hvid");
+			this.regRep = randomizer.memberForSetRegRep(this, "Hvid");
 		}
-	}
-
-	public Medlem tilfældigMedlemAfFarve(String farve) {
-		Medlem m = null;
-		boolean hasFarve = false;
-		for (Lokalgruppe lg : lokalgrupper) {
-			for (Medlem med : lg.getMedlemmer()) {
-				if (med.getFarve().equals(farve)) {
-					hasFarve = true;
-					break;
-				}
-			}
-			if (hasFarve)
-				break;
-		}
-		if (!hasFarve)
-			return m;
-		while (m == null) {
-			m = this.tilfældigLokalgruppe().tilfældigMedlemAfFarve(farve);
-		}
-		return m;
 	}
 
 	public Medlem getRegRep() {

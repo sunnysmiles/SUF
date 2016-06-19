@@ -17,4 +17,8 @@ public interface Randomizer {
 	Medlem getLostMemberCardMedlem(Lokalgruppe lg);
 	Lokalgruppe getMoveAarhusCardLG(ArrayList<Region> regioner);
 	Medlem getMoveAarhusCardMedlem(Lokalgruppe lg);
+	Lokalgruppe getMoveCapitalCardFromLG(ArrayList<Lokalgruppe> lokalgrupper);
+	Medlem getMoveCapitalCardMedlem(Lokalgruppe lg);
+	Lokalgruppe getMoveCapitalCardToLG(Region region);
+	Medlem memberForSetRegRep(Region reg, String farve);
 }
