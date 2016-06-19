@@ -10,13 +10,11 @@ import java.util.ArrayList;
 
 public interface Randomizer {
 	TimeCard getTimeCard(ArrayList<TimeCard> type1);
-	Lokalgruppe randomLokalgruppeProvins(ArrayList<Region> regioner);
-	Lokalgruppe randomLokalgruppe(ArrayList<Lokalgruppe> lokalgrupper);
-	Region randomRegion(ArrayList<Region> regioner);
-	Medlem randomgMedlemfFarve(String farve, ArrayList<Medlem> medlemmer);
-	Ledelse randomLedelse(ArrayList<Medlem> medlemmer, ArrayList<Region> regioner);
+	Ledelse getRandomLedelse(ArrayList<Medlem> medlemmer, ArrayList<Region> regioner);
 	Medlem getHvervningsOrdreMedlem(Lokalgruppe lg, String farve, int medlemCounter);
 	boolean changeFarveOrdreSuccess();
 	Lokalgruppe getLostMemberCardLG(ArrayList<Lokalgruppe> lokalgrupper);
 	Medlem getLostMemberCardMedlem(Lokalgruppe lg);
+	Lokalgruppe getMoveAarhusCardLG(ArrayList<Region> regioner);
+	Medlem getMoveAarhusCardMedlem(Lokalgruppe lg);
 }

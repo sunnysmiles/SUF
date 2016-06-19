@@ -13,6 +13,11 @@ import java.util.Random;
 
 public class RealRandomizer implements Randomizer {
 
+	//This class defines atom-functions for fecthing random object from lists.
+	//All public functions must be tied to one unique usage
+	//This way creating a deterministic test-environment becomes easy
+
+	
 	public static int getRandom(int l, int h) {
 		Random r = new Random();
 		if (h < l)
@@ -26,7 +31,7 @@ public class RealRandomizer implements Randomizer {
 		return cards.get(getRandom(0, cards.size()));
 	}
 
-	public Lokalgruppe randomLokalgruppeProvins(ArrayList<Region> regioner) {
+	private Lokalgruppe randomLokalgruppeProvins(ArrayList<Region> regioner) {
 		ArrayList<Lokalgruppe> provinsgrupper = new ArrayList<Lokalgruppe>();
 		for (Region reg : regioner) {
 			if (reg.getNavn().equals("Øst-Jylland") || reg.getNavn().equals("")
@@ -42,15 +47,15 @@ public class RealRandomizer implements Randomizer {
 		return provinsgrupper.get(getRandom(0, provinsgrupper.size()));
 	}
 
-	public Region randomRegion(ArrayList<Region> regioner) {
+	private Region randomRegion(ArrayList<Region> regioner) {
 		return regioner.get(getRandom(0, regioner.size()));
 	}
 
-	public Lokalgruppe randomLokalgruppe(ArrayList<Lokalgruppe> lokalgrupper) {
+	private Lokalgruppe randomLokalgruppe(ArrayList<Lokalgruppe> lokalgrupper) {
 		return lokalgrupper.get(getRandom(0, lokalgrupper.size()));
 	}
 
-	public Medlem randomgMedlemfFarve(String farve, ArrayList<Medlem> medlemmer) {
+	private Medlem randomgMedlemfFarve(String farve, ArrayList<Medlem> medlemmer) {
 		Medlem m;
 		do {
 			m = medlemmer.get(getRandom(0, medlemmer.size()));
@@ -58,7 +63,7 @@ public class RealRandomizer implements Randomizer {
 		return m;
 	}
 
-	public Ledelse randomLedelse(ArrayList<Medlem> medlemmer,
+	public Ledelse getRandomLedelse(ArrayList<Medlem> medlemmer,
 			ArrayList<Region> regioner) {
 		Ledelse ledelsen = new Ledelse();
 		for (int i = 0; i < 2; i++) {
@@ -128,6 +133,13 @@ public class RealRandomizer implements Randomizer {
 	}
 
 	public Medlem getLostMemberCardMedlem(Lokalgruppe lg) {
+		return randomMedlem(lg);
+	}
+
+	public Lokalgruppe getMoveAarhusCardLG(ArrayList<Region> regioner) {
+		return this.randomLokalgruppeProvins(regioner);
+	}
+	public Medlem getMoveAarhusCardMedlem(Lokalgruppe lg) {
 		return randomMedlem(lg);
 	}
 }

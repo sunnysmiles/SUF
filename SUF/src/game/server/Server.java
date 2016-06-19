@@ -215,7 +215,7 @@ public class Server extends AbstractServer implements Parser {
 		// sker her.
 
 		// TODO Lav en ordenlig start-ledelse
-		ledelsen = randomizer.randomLedelse(medlemmer, regioner);
+		ledelsen = randomizer.getRandomLedelse(medlemmer, regioner);
 
 		for (int i = 0; i < 10; i++) {
 			type1.add(new LostMemberCard());
@@ -487,5 +487,9 @@ public class Server extends AbstractServer implements Parser {
 	
 	public ArrayList<Lokalgruppe> getLokalgrupper(){
 		return lokalgrupper;
+	}
+
+	public ArrayList<Region> getRegioner() {
+		return regioner;
 	}
 }
