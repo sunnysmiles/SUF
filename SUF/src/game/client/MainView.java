@@ -26,6 +26,7 @@ public class MainView extends AbstractGame implements DataChangedListener{
 	public MedlemmerView medlemView = new MedlemmerView(this);
 	public final JLabel iconLabel = new JLabel();
 	private Game game;
+	private boolean gameStarted = false;
 
 	public void init() {
 		game = new Game();
@@ -91,6 +92,8 @@ public class MainView extends AbstractGame implements DataChangedListener{
 	}
 
 	private void draw() {
+		if(!gameStarted )
+			return;
 		offSet = (this.getCanvas().getWidth() - art.danmark.getWidth()) / 2;
 		Art.drawSquare(screen, 0, 0, screen.getWidth(), screen.getHeight(),
 				0xff0D5DD1);
@@ -139,6 +142,7 @@ public class MainView extends AbstractGame implements DataChangedListener{
 			break;
 		case GAME_STARTED:
 			this.lgView = new LokalgruppeView(game.getLokalgrupper(), this);
+			gameStarted = true;
 			break;
 		case STATE_CHANGED:
 			iconLabel.setIcon(new SquareIcon(Color.red));

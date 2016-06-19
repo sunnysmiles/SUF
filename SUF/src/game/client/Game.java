@@ -50,6 +50,8 @@ public class Game {
 		journal = new Journal();
 		journal.addEntry(new MonthEntry("Januar"));
 		state = ClienGameState.PRE_START;
+		dataListeners = new ArrayList<DataChangedListener>();
+		
 	}
 	
 	public void addOrdre(Ordre ordre) {
