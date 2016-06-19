@@ -40,7 +40,6 @@ public class Server extends AbstractServer implements Parser {
 
 	private ArrayList<ServerSpiller> serverSpillere;
 	private ServerArt art;
-	private int dialogResult;
 
 	public ArrayList<Medlem> medlemmer;
 	public ArrayList<Lokalgruppe> lokalgrupper;
@@ -58,6 +57,8 @@ public class Server extends AbstractServer implements Parser {
 	private Scanner scanner;
 	public Stats stats;
 	public int month = 0;
+	private ArrayList<String> commands;
+	private boolean gameStarted = false;
 
 	public enum ServerState {
 		ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_KOO_VALG, LEDELSE_FORSLAG, PRE_START
@@ -65,7 +66,30 @@ public class Server extends AbstractServer implements Parser {
 
 	private ServerState state = ServerState.PRE_START;
 
+	public synchronized void addCommand(String s) {
+		commands.add(s);
+	}
+
+	private synchronized void checkCommands() {
+		for (String s : commands) {
+			switch (s) {
+			case "Start":
+				if (!gameStarted) {
+					startGame();
+					System.out.println("Game Started");
+				}
+				break;
+			default:
+				System.out.println("Unrecognized command");
+				break;
+			}
+		}
+	}
+
 	public void tick() {
+		checkCommands();
+		if (!gameStarted)
+			return;
 		standardUpdate();
 		switch (state) {
 		case PRE_START:
@@ -143,8 +167,8 @@ public class Server extends AbstractServer implements Parser {
 			serverPlayer.heartBeat();
 			serverPlayer.parse(this);
 			// This prevents concurrency errors
-			if (serverPlayer.getHeartBeats() > 2000)
-				toBeRemoved.add(serverPlayer);
+			/* if (serverPlayer.getHeartBeats() > 2000)
+				toBeRemoved.add(serverPlayer); */
 		}
 		for (ServerSpiller serverPlayer : toBeRemoved) {
 			removeServerPlayer(serverPlayer);
@@ -159,6 +183,8 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	public void init() {
+		commands = new ArrayList<String>();
+		new Thread(new ServerConsole(this)).start();
 		stats = new Stats();
 		serverSpillere = new ArrayList<ServerSpiller>();
 		medlemmer = new ArrayList<Medlem>();
@@ -177,8 +203,9 @@ public class Server extends AbstractServer implements Parser {
 		}
 		idCounter = 0;
 		parseScenarie();
-		
-		//Scenariet er parset alt initialisering der kræver at alt data er der sker her.
+
+		// Scenariet er parset alt initialisering der kræver at alt data er der
+		// sker her.
 
 		// TODO Lav en ordenlig start-ledelse
 		ledelsen = new Ledelse();
@@ -198,15 +225,13 @@ public class Server extends AbstractServer implements Parser {
 			while (ledelsen.tilføjMenigMedlem(tilfældigMedlemAfFarve("Lilla")) == -1)
 				;
 		}
-		for(Region r : regioner){
+		for (Region r : regioner) {
 			r.setRegRep();
 		}
 		ledelsen.updateRegionsRepræsentanter(regioner);
 
 		System.out.println("Ready, number of memebers: "
 				+ ledelsen.getAlle().size());
-		dialogResult = JOptionPane.showConfirmDialog(null,
-				"Skal vi starte spillet", "Warning", JOptionPane.YES_NO_OPTION);
 		for (int i = 0; i < 10; i++) {
 			type1.add(new LostMemberCard());
 		}
@@ -222,10 +247,10 @@ public class Server extends AbstractServer implements Parser {
 		for (int i = 0; i < 10; i++) {
 			type3.add(new Dummy3());
 		}
-		startGame();
 	}
 
 	private void startGame() {
+		gameStarted = true;
 		toAll(new StartGamePacket(regioner, lokalgrupper, medlemmer, byer,
 				serverSpillere, stats, ledelsen));
 		for (ServerSpiller sp : serverSpillere) {
@@ -234,6 +259,7 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	private void tidenGår() {
+		System.out.println("TidenGår");
 		for (int i = 0; i < 3; i++) {
 			TimeCard c = type1.get(Util.getRandom(0, type1.size()));
 			c.action(this);

@@ -60,6 +60,14 @@ public abstract class AbstractServer implements Runnable {
 		}
 	}
 	
+	public boolean getRunning(){
+		return running;
+	}
+	
+	public void stop(){
+		running = false;
+	}
+	
 	public void showStats(boolean showStats){
 		this.showStats = showStats;
 	}
