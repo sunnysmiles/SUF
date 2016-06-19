@@ -3,7 +3,7 @@ package game.shared.timecards;
 import engine.network.ClientPacket;
 import game.client.MainView;
 import game.network.JournalEntryPacket;
-import game.network.mistetMedlemPacket;
+import game.network.removeMedlemPacket;
 import game.server.Server;
 import game.shared.Lokalgruppe;
 import game.shared.Medlem;
@@ -20,7 +20,7 @@ public class LostMemberCard extends TimeCard {
 		lg.fjernMedlem(m);
 		server.medlemmer.remove(m);
 		server.toAll(new JournalEntryPacket("Et medlem fra " + lg.getNavn() + " er stoppet i SUF"));
-		server.toAll(new mistetMedlemPacket(m.getId()));
+		server.toAll(new removeMedlemPacket(m.getId()));
 	}
 
 }

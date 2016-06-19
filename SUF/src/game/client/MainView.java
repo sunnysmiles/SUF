@@ -29,6 +29,7 @@ public class MainView extends AbstractGame implements DataChangedListener{
 
 	public void init() {
 		game = new Game();
+		game.addDataListener(this);
 		offSet = 0;
 		missingBeatPackets = 0;
 		art = new Art();
@@ -120,7 +121,6 @@ public class MainView extends AbstractGame implements DataChangedListener{
 	}
 
 	public void update() {
-		game.update();
 		draw();
 	}
 
@@ -136,6 +136,12 @@ public class MainView extends AbstractGame implements DataChangedListener{
 		switch(type){
 		case JOURNAL_ENTRY:
 			journalView.update();
+			break;
+		case GAME_STARTED:
+			this.lgView = new LokalgruppeView(game.getLokalgrupper(), this);
+			break;
+		case STATE_CHANGED:
+			iconLabel.setIcon(new SquareIcon(Color.red));
 			break;
 		default:
 			break;

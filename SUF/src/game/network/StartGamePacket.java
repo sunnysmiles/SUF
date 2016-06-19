@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import engine.network.ClientPacket;
 import engine.network.ServerPacket;
+import game.client.Game;
 import game.client.MainView;
-import game.client.MainView.ClienGametState;
 import game.client.LokalgruppeView;
 import game.client.Spiller;
 import game.server.Server;
@@ -41,19 +41,8 @@ public class StartGamePacket implements ClientPacket<MainView> {
 		}
 		this.ledelsen = ledelsen;
 	}
-
-	public void parse(MainView game) {
-		game.byer = byer;
-		game.medlemmer = medlemmer;
-		game.regioner = regioner;
-		game.lokalgrupper = lokalgrupper;
-		game.spillere = clientSpillere;
-		game.month = "Januar";
-		game.lgView = new LokalgruppeView(game.lokalgrupper, game);
-		game.state = ClienGameState.ORDRER;
-		game.stack(new ClientReadyPacket());
-		game.stats = stats;
-		game.ledelsen = new Ledelse(ledelsen, game);
+	public void parse(Game game) {
+		game.startGame(byer, medlemmer, regioner, lokalgrupper, clientSpillere, stats, ledelsen);
 	}
 
 }

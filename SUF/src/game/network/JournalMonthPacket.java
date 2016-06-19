@@ -1,6 +1,7 @@
 package game.network;
 
 import engine.network.ClientPacket;
+import game.client.Game;
 import game.client.MainView;
 import game.shared.MonthEntry;
 
@@ -12,8 +13,8 @@ public class JournalMonthPacket implements ClientPacket<MainView> {
 		this.title = title;
 	}
 
-	public void parse(MainView game) {
-		game.journal.addEntry(new MonthEntry(title));
+	public void parse(Game game) {
+		game.addJournalMonthEntry(new MonthEntry(title));
 	}
 
 }

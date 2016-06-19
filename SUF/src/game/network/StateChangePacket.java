@@ -10,8 +10,8 @@ import game.client.*;
 
 public class StateChangePacket implements ClientPacket<MainView> {
 
-	public void parse(MainView game) {
-		game.iconLabel.setIcon(new SquareIcon(Color.red));
+	public void parse(Game game) {
+		game.changeState();
 	}
 
 }

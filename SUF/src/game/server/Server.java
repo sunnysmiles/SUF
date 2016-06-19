@@ -18,7 +18,7 @@ import engine.server.PlayerConnection;
 import engine.utils.Util;
 import game.client.MainView;
 import game.network.JournalMonthPacket;
-import game.network.OrdreTilføjetPacket;
+import game.network.OrdreAddedPacket;
 import game.network.SetFarvePacket;
 import game.network.StartGamePacket;
 import game.network.StateChangePacket;
@@ -119,7 +119,7 @@ public class Server extends AbstractServer implements Parser {
 			sp.udførOrder(this);
 		}
 		for (Lokalgruppe lg : lokalgrupper) {
-			toAll(new OrdreTilføjetPacket("Ingen", lg.getId()));
+			toAll(new OrdreAddedPacket("Ingen", lg.getId()));
 		}
 	}
 

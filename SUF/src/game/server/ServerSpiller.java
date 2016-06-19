@@ -7,7 +7,7 @@ import engine.network.HeartBeatPacket;
 import engine.server.AbstractServerPlayer;
 import engine.server.PlayerConnection;
 import game.client.MainView;
-import game.network.OrdreTilføjetPacket;
+import game.network.OrdreAddedPacket;
 import game.shared.Lokalgruppe;
 import game.shared.ordrer.Ordre;
 
@@ -80,7 +80,7 @@ public class ServerSpiller extends AbstractServerPlayer {
 
 	public void sendOrdre() {
 		for(Ordre ordre : ordrer){
-			server.toAll(new OrdreTilføjetPacket(ordre.getName(), ordre
+			server.toAll(new OrdreAddedPacket(ordre.getName(), ordre
 					.getLokalgruppeID()));
 		}
 	}

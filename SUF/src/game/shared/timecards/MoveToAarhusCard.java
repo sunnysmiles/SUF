@@ -1,7 +1,7 @@
 package game.shared.timecards;
 
 import game.network.JournalEntryPacket;
-import game.network.skiftLokalgruppePacket;
+import game.network.changeLokalgruppePacket;
 import game.server.Server;
 import game.shared.Entry;
 import game.shared.Lokalgruppe;
@@ -21,7 +21,7 @@ public class MoveToAarhusCard extends TimeCard {
 		aarhus.tilføjMedlem(medlem);
 		server.toAll(new JournalEntryPacket(new Entry(
 				"Et medlem er flyttet fra " + lg.getNavn() + " til Aarhus")));
-		server.toAll(new skiftLokalgruppePacket(medlem.getId(), lg.getId(), aarhus.getId()));
+		server.toAll(new changeLokalgruppePacket(medlem.getId(), lg.getId(), aarhus.getId()));
 	}
 
 }

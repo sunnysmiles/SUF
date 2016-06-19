@@ -2,6 +2,7 @@ package game.client;
 
 import engine.client.Connection;
 import engine.network.ServerPacket;
+import engine.utils.SquareIcon;
 import game.client.DataChangedListener.ChangeType;
 import game.network.ClientReadyPacket;
 import game.network.OrdrePacket;
@@ -18,6 +19,7 @@ import game.shared.Region;
 import game.shared.Stats;
 import game.shared.ordrer.Ordre;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -49,28 +51,16 @@ public class Game {
 		journal.addEntry(new MonthEntry("Januar"));
 		state = ClienGameState.PRE_START;
 	}
-
-	public void update() {
-		fromServer();
-		switch (state) {
-		case PRE_START:
-			missingBeatPackets = 0;
-			break;
-		case ORDRER:
-			break;
-		default:
-			missingBeatPackets = 0;
-			break;
-		}
-	}
-
+	
 	public void addOrdre(Ordre ordre) {
+		if (state != ClienGameState.ORDRER)
+			return;
 		if (farve.equals(lokalgruppeFraID(ordre.getLokalgruppeID()).getFarve()))
 			return;
 		sendPacket(new OrdrePacket(ordre));
 		lokalgruppeFraID(ordre.getLokalgruppeID()).tilføjOrdre(ordre.getName());
 	}
-	
+
 	private void fromServer() {
 		missingBeatPackets++;
 		connection.parse(this);
@@ -128,7 +118,7 @@ public class Game {
 		return byer;
 	}
 
-	public Medlem medlemFraID(int id) {
+	private Medlem medlemFraID(int id) {
 		for (Medlem m : medlemmer) {
 			if (m.getId() == id)
 				return m;
@@ -136,7 +126,7 @@ public class Game {
 		return null;
 	}
 
-	public Region regionFraID(int id) {
+	private Region regionFraID(int id) {
 		for (Region r : regioner) {
 			if (r.getId() == id)
 				return r;
@@ -144,7 +134,7 @@ public class Game {
 		return null;
 	}
 
-	public Lokalgruppe lokalgruppeFraID(int id) {
+	private Lokalgruppe lokalgruppeFraID(int id) {
 		for (Lokalgruppe l : lokalgrupper) {
 			if (l.getId() == id)
 				return l;
@@ -152,7 +142,7 @@ public class Game {
 		return null;
 	}
 
-	public By byFraID(int id) {
+	private By byFraID(int id) {
 		for (By by : byer) {
 			if (by.getId() == id)
 				return by;
@@ -167,13 +157,13 @@ public class Game {
 	public String getFarve() {
 		return farve;
 	}
-	
-	public void addDataListener(DataChangedListener listener){
+
+	public void addDataListener(DataChangedListener listener) {
 		dataListeners.add(listener);
 	}
-	
-	public void dataChangedSignal(ChangeType type){
-		for(DataChangedListener listener : dataListeners){
+
+	public void dataChangedSignal(ChangeType type) {
+		for (DataChangedListener listener : dataListeners) {
 			listener.DataChanged(type);
 		}
 	}
@@ -181,5 +171,66 @@ public class Game {
 	public void addJournalEntry(Entry entry) {
 		journal.getCurrentEntry().addEntry(entry);
 		dataChangedSignal(ChangeType.JOURNAL_ENTRY);
+	}
+
+	public void addJournalMonthEntry(MonthEntry monthEntry) {
+		journal.addEntry(monthEntry);
+		dataChangedSignal(ChangeType.JOURNAL_ENTRY);
+	}
+
+	public void removeMedlem(int medlemID) {
+		medlemmer.remove(medlemFraID(medlemID));
+	}
+
+	public void setMedlemFarve(int medlemID, String farve) {
+		medlemFraID(medlemID).setFarve(farve);
+	}
+
+	public void newMedlem(int lokalgruppeID, Medlem medlem) {
+		lokalgruppeFraID(lokalgruppeID).tilføjMedlem(medlem);
+		;
+		medlemmer.add(medlem);
+	}
+
+	public void changeLokalgruppe(int lokalgruppe1ID, int lokalgruppe2ID,
+			int medlemID) {
+		lokalgruppeFraID(lokalgruppe1ID).fjernMedlem(medlemFraID(medlemID));
+		lokalgruppeFraID(lokalgruppe2ID).tilføjMedlem(medlemFraID(medlemID));
+
+	}
+
+	public void addLokalGruppeOrdre(String navn, int lokalgruppeID) {
+		lokalgruppeFraID(lokalgruppeID).tilføjOrdre(navn);
+	}
+
+	public void clearOrdre() {
+		for (Lokalgruppe lg : lokalgrupper) {
+			lg.sletOrdrer();
+		}
+	}
+
+	public void setFarve(String farve) {
+		this.farve = farve;
+	}
+
+	public void startGame(ArrayList<By> byer, ArrayList<Medlem> medlemmer,
+			ArrayList<Region> regioner, ArrayList<Lokalgruppe> lokalgrupper,
+			ArrayList<Spiller> clientSpillere, Stats stats, Ledelse ledelsen) {
+		
+		this.byer = byer;
+		this.medlemmer = medlemmer;
+		this.regioner = regioner;
+		this.lokalgrupper = lokalgrupper;
+		this.spillere = clientSpillere;
+		this.month = "Januar";
+		this.state = ClienGameState.ORDRER;
+		this.stats = stats;
+		this.ledelsen = new Ledelse(ledelsen, this);
+		dataChangedSignal(ChangeType.GAME_STARTED);
+		sendPacket(new ClientReadyPacket());
+	}
+
+	public void changeState() {
+		dataChangedSignal(ChangeType.STATE_CHANGED);
 	}
 }
