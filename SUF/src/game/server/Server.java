@@ -22,6 +22,8 @@ import game.network.OrdreAddedPacket;
 import game.network.SetFarvePacket;
 import game.network.StartGamePacket;
 import game.network.StateChangePacket;
+import game.server.random.Randomizer;
+import game.server.random.RealRandomizer;
 import game.shared.By;
 import game.shared.Journal;
 import game.shared.Ledelse;
@@ -65,7 +67,12 @@ public class Server extends AbstractServer implements Parser {
 	};
 
 	private ServerState state = ServerState.PRE_START;
+	public Randomizer randomizer;
 
+	public Server(Randomizer randomizer){
+		this.randomizer = randomizer;
+	}
+	
 	public synchronized void addCommand(String s) {
 		commands.add(s);
 	}
@@ -208,30 +215,8 @@ public class Server extends AbstractServer implements Parser {
 		// sker her.
 
 		// TODO Lav en ordenlig start-ledelse
-		ledelsen = new Ledelse();
-		for (int i = 0; i < 2; i++) {
-			while (ledelsen.tilføjMenigMedlem(tilfældigMedlemAfFarve("Rød")) == -1)
-				;
-		}
-		for (int i = 0; i < 2; i++) {
-			while (ledelsen.tilføjMenigMedlem(tilfældigMedlemAfFarve("Sort")) == -1)
-				;
-		}
-		for (int i = 0; i < 2; i++) {
-			while (ledelsen.tilføjMenigMedlem(tilfældigMedlemAfFarve("Grøn")) == -1)
-				;
-		}
-		for (int i = 0; i < 2; i++) {
-			while (ledelsen.tilføjMenigMedlem(tilfældigMedlemAfFarve("Lilla")) == -1)
-				;
-		}
-		for (Region r : regioner) {
-			r.setRegRep();
-		}
-		ledelsen.updateRegionsRepræsentanter(regioner);
+		ledelsen = randomizer.randomLedelse(medlemmer, regioner);
 
-		System.out.println("Ready, number of memebers: "
-				+ ledelsen.getAlle().size());
 		for (int i = 0; i < 10; i++) {
 			type1.add(new LostMemberCard());
 		}
@@ -261,35 +246,20 @@ public class Server extends AbstractServer implements Parser {
 	private void tidenGår() {
 		System.out.println("TidenGår");
 		for (int i = 0; i < 3; i++) {
-			TimeCard c = type1.get(Util.getRandom(0, type1.size()));
+			TimeCard c = randomizer.getTimeCard(type1);
 			c.action(this);
 			type1.remove(c);
 		}
 		for (int i = 0; i < 2; i++) {
-			TimeCard c = type2.get(Util.getRandom(0, type2.size()));
+			TimeCard c = randomizer.getTimeCard(type2);
 			c.action(this);
 			type2.remove(c);
 		}
-		TimeCard c = type3.get(Util.getRandom(0, type3.size()));
+		TimeCard c = randomizer.getTimeCard(type3);
 		c.action(this);
 		type3.remove(c);
 	}
 
-	public Lokalgruppe fraProvinsen() {
-		ArrayList<Lokalgruppe> provinsgrupper = new ArrayList<Lokalgruppe>();
-		for (Region reg : regioner) {
-			if (reg.getNavn().equals("Øst-Jylland") || reg.getNavn().equals("")
-					|| reg.getNavn().equals("Nord-Jylland")
-					|| reg.getNavn().equals("Sønder-Jylland")) {
-				for (Lokalgruppe lg : reg.getLokalgrupper()) {
-					if (!lg.getNavn().equals("Aarhus")) {
-						provinsgrupper.add(lg);
-					}
-				}
-			}
-		}
-		return provinsgrupper.get(Util.getRandom(0, provinsgrupper.size()));
-	}
 
 	public Lokalgruppe lokalgruppeFraNavn(String navn) {
 		for (Lokalgruppe lg : lokalgrupper) {
@@ -472,11 +442,7 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	public static void main(String[] args) {
-		new Thread(new Server()).start();
-	}
-
-	public Region tilfældigRegion() {
-		return regioner.get(Util.getRandom(0, regioner.size()));
+		new Thread(new Server(new RealRandomizer())).start();
 	}
 
 	public Region regionFraNavn(String navn) {
@@ -485,10 +451,6 @@ public class Server extends AbstractServer implements Parser {
 				return reg;
 		}
 		return null;
-	}
-
-	public Lokalgruppe tilfældigLokalgruppe() {
-		return lokalgrupper.get(Util.getRandom(0, lokalgrupper.size()));
 	}
 
 	public Medlem medlemFraID(int id) {
@@ -521,13 +483,5 @@ public class Server extends AbstractServer implements Parser {
 				return by;
 		}
 		return null;
-	}
-
-	public Medlem tilfældigMedlemAfFarve(String farve) {
-		Medlem m;
-		do {
-			m = medlemmer.get(Util.getRandom(0, medlemmer.size()));
-		} while (!m.getFarve().equals(farve));
-		return m;
 	}
 }

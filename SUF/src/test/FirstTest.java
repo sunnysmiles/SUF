@@ -2,10 +2,11 @@ package test;
 
 import game.client.Game;
 import game.server.Server;
+import game.server.random.RealRandomizer;
 
 public class FirstTest {
 	public static void main(String[] args){
-		Server server = new Server();
+		Server server = new Server(new RealRandomizer());
 		new Thread(server).start();
 		waits();
 		Game g1 = new Game();

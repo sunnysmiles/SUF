@@ -14,7 +14,7 @@ public class MoveToAarhusCard extends TimeCard {
 	}
 
 	public void action(Server server) {
-		Lokalgruppe lg = server.fraProvinsen();
+		Lokalgruppe lg = server.randomLokalgruppeProvins();
 		Medlem medlem = lg.tilfældigMedlem();
 		lg.fjernMedlem(medlem);
 		Lokalgruppe aarhus = server.lokalgruppeFraNavn("Aarhus");
