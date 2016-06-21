@@ -113,10 +113,10 @@ public class RealRandomizer implements Randomizer {
 					toCheck)) == -1)
 				;
 		}
-		/*for (Region r : regioner) {
+		for (Region r : regioner) {
 			r.setRegRep(this);
-		}*/
-		//ledelsen.updateRegionsRepræsentanter(regioner);
+		}
+		ledelsen.updateRegionsRepræsentanter(regioner);
 		return ledelsen;
 	}
 
@@ -196,24 +196,26 @@ public class RealRandomizer implements Randomizer {
 
 	private Medlem randomMemberFarve(Region reg, String farve) {
 		Medlem m = null;
+		ArrayList<Medlem> medlemmerFarve = new ArrayList<Medlem>();
 		boolean hasFarve = false;
 		for (Lokalgruppe lg : reg.getLokalgrupper()) {
 			for (Medlem med : lg.getMedlemmer()) {
 				if (med.getFarve().equals(farve)) {
+					medlemmerFarve.add(med);
 					hasFarve = true;
-					break;
 				}
 			}
-			if (hasFarve)
-				break;
 		}
 		if (!hasFarve)
 			return m;
 		while (m == null) {
-			m = this.randomMedlemFarve(farve, this.randomLokalgruppe(reg)
-					.getMedlemmer());
+			m = this.randomMedlem(medlemmerFarve);
 		}
 		return m;
+	}
+
+	private Medlem randomMedlem(ArrayList<Medlem> medlemmer) {
+		return medlemmer.get(getRandom(0, medlemmer.size()));
 	}
 
 	public Medlem memberForSetRegRep(Region reg, String farve) {

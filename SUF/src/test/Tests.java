@@ -24,11 +24,11 @@ public class Tests {
 		waitsShort();
 		g2 = new Game();
 		new Thread(g2).start();
-		waitsLong();
+		waitsShort();
 		server.addCommand("Start");
 		while(!server.gameStarted)
 			waitsShort();
-		waitsShort();
+		waitsLong();
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class Tests {
 	
 	public static void waitsShort(){
 		try {
-			Thread.sleep(100);
+			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
