@@ -1,4 +1,5 @@
-Implement a Non-deterministic Randomizer for server
+Rewrite getLedelse in randomizer
+
 Implement a deterministic Randomizer for server
 Implement J-UNIT tests for the current features
 Manually test that the views update correctly

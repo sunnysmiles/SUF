@@ -55,6 +55,14 @@ public class RealRandomizer implements Randomizer {
 	}
 
 	private Medlem randomMedlemFarve(String farve, ArrayList<Medlem> medlemmer) {
+		boolean exists = false;
+		for (Medlem m : medlemmer) {
+			if (m.getFarve().equals(farve))
+				exists = true;
+			break;
+		}
+		if (!exists)
+			return null;
 		Medlem m;
 		do {
 			m = medlemmer.get(getRandom(0, medlemmer.size()));
@@ -65,30 +73,50 @@ public class RealRandomizer implements Randomizer {
 	public Ledelse getRandomLedelse(ArrayList<Medlem> medlemmer,
 			ArrayList<Region> regioner) {
 		Ledelse ledelsen = new Ledelse();
-		for (int i = 0; i < 2; i++) {
-			while (ledelsen.tilføjMenigMedlem(randomMedlemFarve("Rød",
-					medlemmer)) == -1)
-				;
+		ArrayList<Medlem> toCheck = new ArrayList<Medlem>();
+		for (Medlem m : medlemmer) {
+			if (m.getFarve().equals("Rød"))
+				toCheck.add(m);
 		}
 		for (int i = 0; i < 2; i++) {
-			while (ledelsen.tilføjMenigMedlem(randomMedlemFarve("Sort",
-					medlemmer)) == -1)
+			while (ledelsen
+					.tilføjMenigMedlem(randomMedlemFarve("Rød", toCheck)) == -1)
 				;
 		}
+		toCheck.clear();
+		for (Medlem m : medlemmer) {
+			if (m.getFarve().equals("Sort"))
+				toCheck.add(m);
+		}
 		for (int i = 0; i < 2; i++) {
-			while (ledelsen.tilføjMenigMedlem(randomMedlemFarve("Grøn",
-					medlemmer)) == -1)
+			while (ledelsen
+					.tilføjMenigMedlem(randomMedlemFarve("Sort", toCheck)) == -1)
 				;
+		}
+		toCheck.clear();
+		for (Medlem m : medlemmer) {
+			if (m.getFarve().equals("Grøn"))
+				toCheck.add(m);
+		}
+		for (int i = 0; i < 2; i++) {
+			while (ledelsen
+					.tilføjMenigMedlem(randomMedlemFarve("Grøn", toCheck)) == -1)
+				;
+		}
+		toCheck.clear();
+		for (Medlem m : medlemmer) {
+			if (m.getFarve().equals("Lilla"))
+				toCheck.add(m);
 		}
 		for (int i = 0; i < 2; i++) {
 			while (ledelsen.tilføjMenigMedlem(randomMedlemFarve("Lilla",
-					medlemmer)) == -1)
+					toCheck)) == -1)
 				;
 		}
-		for (Region r : regioner) {
+		/*for (Region r : regioner) {
 			r.setRegRep(this);
-		}
-		ledelsen.updateRegionsRepræsentanter(regioner);
+		}*/
+		//ledelsen.updateRegionsRepræsentanter(regioner);
 		return ledelsen;
 	}
 

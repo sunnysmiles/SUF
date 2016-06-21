@@ -8,7 +8,7 @@ import game.server.random.RealRandomizer;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test2 {
+public class Tests {
 
 	private Game g1;
 	private Game g2;
@@ -18,15 +18,17 @@ public class Test2 {
 	public void setUp() throws Exception {
 		server = new Server(new RealRandomizer());
 		new Thread(server).start();
-		waits();
+		waitsShort();
 		g1 = new Game();
 		new Thread(g1).start();
-		waits();
+		waitsShort();
 		g2 = new Game();
 		new Thread(g2).start();
-		waits();
+		waitsLong();
 		server.addCommand("Start");
-		waits();
+		while(!server.gameStarted)
+			waitsShort();
+		waitsShort();
 	}
 
 	@Test
@@ -35,9 +37,17 @@ public class Test2 {
 		assertEquals("Sort", g2.farve);
 	}
 	
-	public static void waits(){
+	public static void waitsLong(){
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void waitsShort(){
+		try {
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

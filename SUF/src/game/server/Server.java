@@ -60,7 +60,7 @@ public class Server extends AbstractServer implements Parser {
 	public Stats stats;
 	public int month = 0;
 	private ArrayList<String> commands;
-	private boolean gameStarted = false;
+	public boolean gameStarted = false;
 
 	public enum ServerState {
 		ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_KOO_VALG, LEDELSE_FORSLAG, PRE_START
@@ -69,10 +69,10 @@ public class Server extends AbstractServer implements Parser {
 	private ServerState state = ServerState.PRE_START;
 	public Randomizer randomizer;
 
-	public Server(Randomizer randomizer){
+	public Server(Randomizer randomizer) {
 		this.randomizer = randomizer;
 	}
-	
+
 	public synchronized void addCommand(String s) {
 		commands.add(s);
 	}
@@ -91,6 +91,7 @@ public class Server extends AbstractServer implements Parser {
 				break;
 			}
 		}
+		commands.clear();
 	}
 
 	public void tick() {
@@ -174,8 +175,10 @@ public class Server extends AbstractServer implements Parser {
 			serverPlayer.heartBeat();
 			serverPlayer.parse(this);
 			// This prevents concurrency errors
-			/* if (serverPlayer.getHeartBeats() > 2000)
-				toBeRemoved.add(serverPlayer); */
+			/*
+			 * if (serverPlayer.getHeartBeats() > 2000)
+			 * toBeRemoved.add(serverPlayer);
+			 */
 		}
 		for (ServerSpiller serverPlayer : toBeRemoved) {
 			removeServerPlayer(serverPlayer);
@@ -259,7 +262,6 @@ public class Server extends AbstractServer implements Parser {
 		c.action(this);
 		type3.remove(c);
 	}
-
 
 	public Lokalgruppe lokalgruppeFraNavn(String navn) {
 		for (Lokalgruppe lg : lokalgrupper) {
@@ -484,8 +486,8 @@ public class Server extends AbstractServer implements Parser {
 		}
 		return null;
 	}
-	
-	public ArrayList<Lokalgruppe> getLokalgrupper(){
+
+	public ArrayList<Lokalgruppe> getLokalgrupper() {
 		return lokalgrupper;
 	}
 
