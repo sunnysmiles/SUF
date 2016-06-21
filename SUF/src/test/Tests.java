@@ -3,7 +3,11 @@ package test;
 import static org.junit.Assert.*;
 import game.client.Game;
 import game.server.Server;
+import game.server.Server.ServerState;
+import game.server.random.FakeRandomizer;
 import game.server.random.RealRandomizer;
+import game.shared.Entry;
+import game.shared.MonthEntry;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +20,7 @@ public class Tests {
 
 	@Before
 	public void setUp() throws Exception {
-		server = new Server(new RealRandomizer());
+		server = new Server(new FakeRandomizer());
 		new Thread(server).start();
 		waitsShort();
 		g1 = new Game();
@@ -35,6 +39,13 @@ public class Tests {
 	public void test() {
 		assertEquals("Rød", g1.farve);
 		assertEquals("Sort", g2.farve);
+		while(g1.isReady())
+			waitsShort();
+		for(MonthEntry me : g1.getJournal().getEntries()){
+			for(Entry e : me.getEntries()){
+				System.out.println(e.getText());
+			}
+		}
 	}
 	
 	public static void waitsLong(){

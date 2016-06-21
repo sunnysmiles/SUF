@@ -43,6 +43,7 @@ public class Game implements Runnable {
 	private int missingBeatPackets = 0;
 	private boolean running = true;
 	private ArrayList<DataChangedListener> dataListeners;
+	private boolean ready = false;
 
 	public Game() {
 		connection = new Connection();
@@ -116,6 +117,7 @@ public class Game implements Runnable {
 	}
 
 	public void ready() {
+		ready = true;
 		sendPacket(new ClientReadyPacket());
 	}
 
@@ -244,6 +246,7 @@ public class Game implements Runnable {
 	}
 
 	public void changeState() {
+		ready  = false;
 		dataChangedSignal(ChangeType.STATE_CHANGED);
 	}
 
@@ -253,5 +256,9 @@ public class Game implements Runnable {
 
 	public ArrayList<Region> getRegioner() {
 		return regioner;
+	}
+
+	public boolean isReady() {
+		return ready;
 	}
 }

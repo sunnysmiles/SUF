@@ -22,6 +22,7 @@ import game.network.OrdreAddedPacket;
 import game.network.SetFarvePacket;
 import game.network.StartGamePacket;
 import game.network.StateChangePacket;
+import game.server.Server.ServerState;
 import game.server.random.Randomizer;
 import game.server.random.RealRandomizer;
 import game.shared.By;
@@ -493,5 +494,9 @@ public class Server extends AbstractServer implements Parser {
 
 	public ArrayList<Region> getRegioner() {
 		return regioner;
+	}
+
+	public ServerState getState() {
+		return state;
 	}
 }

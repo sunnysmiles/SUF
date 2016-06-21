@@ -12,7 +12,7 @@ public interface Randomizer {
 	TimeCard getTimeCard(ArrayList<TimeCard> type1);
 	Ledelse getRandomLedelse(ArrayList<Medlem> medlemmer, ArrayList<Region> regioner);
 	Medlem getHvervningsOrdreMedlem(Lokalgruppe lg, String farve, int medlemCounter);
-	boolean changeFarveOrdreSuccess();
+	Medlem changeFarveOrdreSuccess(Lokalgruppe lg);
 	Lokalgruppe getLostMemberCardLG(ArrayList<Lokalgruppe> lokalgrupper);
 	Medlem getLostMemberCardMedlem(Lokalgruppe lg);
 	Lokalgruppe getMoveAarhusCardLG(ArrayList<Region> regioner);

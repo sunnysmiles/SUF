@@ -54,6 +54,8 @@ public class RealRandomizer implements Randomizer {
 		return lokalgrupper.get(getRandom(0, lokalgrupper.size()));
 	}
 
+	
+	//TODO: This works but it's kinda silly
 	private Medlem randomMedlemFarve(String farve, ArrayList<Medlem> medlemmer) {
 		boolean exists = false;
 		for (Medlem m : medlemmer) {
@@ -133,8 +135,18 @@ public class RealRandomizer implements Randomizer {
 		return m;
 	}
 
-	public boolean changeFarveOrdreSuccess() {
-		return (getRandom(1, 3) == 2);
+	public Medlem changeFarveOrdreSuccess(Lokalgruppe lg) {
+		ArrayList<Medlem> medlemmerHvid = new ArrayList<Medlem>();
+		if (getRandom(0, 2) == 0)
+			return null;
+		for (Medlem m : lg.getMedlemmer()) {
+			if (m.getFarve().equals("Hvid"))
+				medlemmerHvid.add(m);
+		}
+		if (medlemmerHvid.size() > 0)
+			return this.randomMedlem(medlemmerHvid);
+		else
+			return null;
 	}
 
 	public Lokalgruppe getLostMemberCardLG(ArrayList<Lokalgruppe> lokalgrupper) {
@@ -217,7 +229,7 @@ public class RealRandomizer implements Randomizer {
 	private Medlem randomMedlem(ArrayList<Medlem> medlemmer) {
 		return medlemmer.get(getRandom(0, medlemmer.size()));
 	}
-
+	
 	public Medlem memberForSetRegRep(Region reg, String farve) {
 		return this.randomMemberFarve(reg, farve);
 	}
