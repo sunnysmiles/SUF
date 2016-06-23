@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 import game.client.Game;
+import game.client.Game.ClientGameState;
 import game.server.Server;
 import game.server.Server.ServerState;
 import game.server.random.FakeRandomizer;
@@ -39,7 +40,7 @@ public class Tests {
 	public void test() {
 		assertEquals("Rød", g1.farve);
 		assertEquals("Sort", g2.farve);
-		while(g1.isReady())
+		while(g1.getState() != ClientGameState.ORDRER)
 			waitsShort();
 		for(MonthEntry me : g1.getJournal().getEntries()){
 			for(Entry e : me.getEntries()){

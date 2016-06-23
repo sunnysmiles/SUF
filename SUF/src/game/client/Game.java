@@ -24,11 +24,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Game implements Runnable {
-	public enum ClienGameState {
+	public enum ClientGameState {
 		PRE_START, ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_FORSLAG, LEDELSE_KOO_VALG
 	};
 
-	private ClienGameState state = ClienGameState.PRE_START;
+	private ClientGameState state = ClientGameState.PRE_START;
 	public ArrayList<By> byer;
 	private ArrayList<Medlem> medlemmer;
 	private ArrayList<Region> regioner;
@@ -50,7 +50,7 @@ public class Game implements Runnable {
 		new Thread(connection).start();
 		journal = new Journal();
 		journal.addEntry(new MonthEntry("Januar"));
-		state = ClienGameState.PRE_START;
+		state = ClientGameState.PRE_START;
 		dataListeners = new ArrayList<DataChangedListener>();
 
 	}
@@ -76,7 +76,7 @@ public class Game implements Runnable {
 	}
 
 	public void addOrdre(Ordre ordre) {
-		if (state != ClienGameState.ORDRER)
+		if (state != ClientGameState.ORDRER)
 			return;
 		if (farve.equals(lokalgruppeFraID(ordre.getLokalgruppeID()).getFarve()))
 			return;
@@ -165,7 +165,7 @@ public class Game implements Runnable {
 		return null;
 	}
 
-	public ClienGameState getState() {
+	public ClientGameState getState() {
 		return state;
 	}
 
@@ -238,15 +238,16 @@ public class Game implements Runnable {
 		this.lokalgrupper = lokalgrupper;
 		this.spillere = clientSpillere;
 		this.month = "Januar";
-		this.state = ClienGameState.ORDRER;
+		this.state = ClientGameState.PRE_START;
 		this.stats = stats;
 		this.ledelsen = new Ledelse(ledelsen, getMedlemmer(), getRegioner());
 		dataChangedSignal(ChangeType.GAME_STARTED);
 		sendPacket(new ClientReadyPacket());
 	}
 
-	public void changeState() {
+	public void changeState(ClientGameState newState) {
 		ready  = false;
+		state = newState;
 		dataChangedSignal(ChangeType.STATE_CHANGED);
 	}
 

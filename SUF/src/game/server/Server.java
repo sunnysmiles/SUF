@@ -17,6 +17,7 @@ import engine.server.Parser;
 import engine.server.PlayerConnection;
 import engine.utils.Util;
 import game.client.MainView;
+import game.client.Game.ClientGameState;
 import game.network.JournalMonthPacket;
 import game.network.OrdreAddedPacket;
 import game.network.SetFarvePacket;
@@ -106,7 +107,7 @@ public class Server extends AbstractServer implements Parser {
 				resetReady();
 				tidenGår();
 				state = ServerState.ORDRER;
-				toAll(new StateChangePacket());
+				toAll(new StateChangePacket(ClientGameState.ORDRER));
 			}
 			break;
 		case ORDRER:
@@ -114,7 +115,7 @@ public class Server extends AbstractServer implements Parser {
 				resetReady();
 				sendOrdre();
 				state = ServerState.KOO;
-				toAll(new StateChangePacket());
+				toAll(new StateChangePacket(ClientGameState.KOO));
 			}
 			break;
 		case KOO:
@@ -126,7 +127,7 @@ public class Server extends AbstractServer implements Parser {
 					month = 0;
 				toAll(new JournalMonthPacket(Journal.getMonth(month)));
 				state = ServerState.PRE_START;
-				toAll(new StateChangePacket());
+				toAll(new StateChangePacket(ClientGameState.PRE_START));
 			}
 			break;
 		default:

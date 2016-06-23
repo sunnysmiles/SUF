@@ -1,6 +1,6 @@
 package game.client;
 
-import game.client.Game.ClienGameState;
+import game.client.Game.ClientGameState;
 import game.shared.Lokalgruppe;
 import game.shared.ordrer.HvervningsOrdre;
 import game.shared.ordrer.SkolingOrdre;
@@ -22,7 +22,7 @@ public class LokalgruppeClickListener implements MouseListener {
 		if (e.getButton() != MouseEvent.BUTTON3)
 			return;
 		//Check if in command-state
-		if (mainView.getGame().getState() != ClienGameState.ORDRER)
+		if (mainView.getGame().getState() != ClientGameState.ORDRER)
 			return;
 		//Iterate over all lokalgrupper
 		for (Lokalgruppe lg : mainView.getGame().getLokalgrupper()) {
