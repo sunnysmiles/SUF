@@ -7,15 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
-
 import engine.network.ClientPacket;
 import engine.network.ServerPacket;
 import engine.server.AbstractServer;
 import engine.server.AbstractServerPlayer;
 import engine.server.Parser;
 import engine.server.PlayerConnection;
-import engine.utils.Util;
 import game.client.MainView;
 import game.client.Game.ClientGameState;
 import game.network.JournalMonthPacket;
@@ -23,7 +20,7 @@ import game.network.OrdreAddedPacket;
 import game.network.SetFarvePacket;
 import game.network.StartGamePacket;
 import game.network.StateChangePacket;
-import game.server.Server.ServerState;
+import game.server.random.FakeRandomizer;
 import game.server.random.Randomizer;
 import game.server.random.RealRandomizer;
 import game.shared.By;
@@ -65,10 +62,10 @@ public class Server extends AbstractServer implements Parser {
 	public boolean gameStarted = false;
 
 	public enum ServerState {
-		ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_KOO_VALG, LEDELSE_FORSLAG, PRE_START
+		ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_KOO_VALG, LEDELSE_FORSLAG, PRE_START, PRE_INIT
 	};
 
-	private ServerState state = ServerState.PRE_START;
+	private ServerState state = ServerState.PRE_INIT;
 	public Randomizer randomizer;
 
 	public Server(Randomizer randomizer) {
@@ -237,6 +234,7 @@ public class Server extends AbstractServer implements Parser {
 		for (int i = 0; i < 10; i++) {
 			type3.add(new Dummy3());
 		}
+		state = ServerState.PRE_START;
 	}
 
 	private void startGame() {
@@ -446,7 +444,7 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	public static void main(String[] args) {
-		new Thread(new Server(new RealRandomizer())).start();
+		new Thread(new Server(new FakeRandomizer())).start();
 	}
 
 	public Region regionFraNavn(String navn) {
@@ -472,7 +470,7 @@ public class Server extends AbstractServer implements Parser {
 		}
 		return null;
 	}
-
+	
 	public Lokalgruppe lokalgruppeFraID(int id) {
 		for (Lokalgruppe l : lokalgrupper) {
 			if (l.getId() == id)

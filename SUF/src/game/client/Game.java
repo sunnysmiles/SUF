@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class Game implements Runnable {
 	public enum ClientGameState {
-		PRE_START, ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_FORSLAG, LEDELSE_KOO_VALG
+		NOT_STARTED, PRE_START, ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_FORSLAG, LEDELSE_KOO_VALG
 	};
 
 	private ClientGameState state = ClientGameState.PRE_START;
@@ -50,7 +50,7 @@ public class Game implements Runnable {
 		new Thread(connection).start();
 		journal = new Journal();
 		journal.addEntry(new MonthEntry("Januar"));
-		state = ClientGameState.PRE_START;
+		state = ClientGameState.NOT_STARTED;
 		dataListeners = new ArrayList<DataChangedListener>();
 
 	}
@@ -78,7 +78,7 @@ public class Game implements Runnable {
 	public void addOrdre(Ordre ordre) {
 		if (state != ClientGameState.ORDRER)
 			return;
-		if (farve.equals(lokalgruppeFraID(ordre.getLokalgruppeID()).getFarve()))
+		if (!farve.equals(lokalgruppeFraID(ordre.getLokalgruppeID()).getFarve()))
 			return;
 		sendPacket(new OrdrePacket(ordre));
 		lokalgruppeFraID(ordre.getLokalgruppeID()).tilføjOrdre(ordre.getName());
@@ -133,7 +133,7 @@ public class Game implements Runnable {
 		return byer;
 	}
 
-	private Medlem medlemFraID(int id) {
+	public Medlem medlemFraID(int id) {
 		for (Medlem m : medlemmer) {
 			if (m.getID() == id)
 				return m;
@@ -141,7 +141,7 @@ public class Game implements Runnable {
 		return null;
 	}
 
-	private Region regionFraID(int id) {
+	public Region regionFraID(int id) {
 		for (Region r : regioner) {
 			if (r.getId() == id)
 				return r;
@@ -156,8 +156,16 @@ public class Game implements Runnable {
 		}
 		return null;
 	}
+	
+	public Lokalgruppe lokalgruppeFraNavn(String navn) {
+		for (Lokalgruppe lg : lokalgrupper) {
+			if (lg.getNavn().equals(navn))
+				return lg;
+		}
+		return null;
+	}
 
-	private By byFraID(int id) {
+	public By byFraID(int id) {
 		for (By by : byer) {
 			if (by.getId() == id)
 				return by;
@@ -238,10 +246,10 @@ public class Game implements Runnable {
 		this.lokalgrupper = lokalgrupper;
 		this.spillere = clientSpillere;
 		this.month = "Januar";
-		this.state = ClientGameState.PRE_START;
 		this.stats = stats;
 		this.ledelsen = new Ledelse(ledelsen, getMedlemmer(), getRegioner());
 		dataChangedSignal(ChangeType.GAME_STARTED);
+		this.state = ClientGameState.PRE_START;
 		sendPacket(new ClientReadyPacket());
 	}
 
@@ -262,4 +270,5 @@ public class Game implements Runnable {
 	public boolean isReady() {
 		return ready;
 	}
+	
 }

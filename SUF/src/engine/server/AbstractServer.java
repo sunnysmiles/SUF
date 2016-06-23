@@ -23,6 +23,8 @@ public abstract class AbstractServer implements Runnable {
 	private int ticks;
 	private boolean showStats;
 
+	private Thread listenerThread;
+
 	public abstract void tick();
 	public abstract void init();
 	public abstract void playerAdded(PlayerConnection s);
@@ -32,7 +34,8 @@ public abstract class AbstractServer implements Runnable {
 		nsPerSend = 1000000000 / 60D;
 		idCounter = 0;
 		listener = new Listener(this);
-		listener.start();
+		listenerThread = new Thread(listener);
+		listenerThread.start();
 		playerConnections = new ArrayList<PlayerConnection>();
 		init();
 		running = true;
@@ -66,6 +69,9 @@ public abstract class AbstractServer implements Runnable {
 	
 	public void stop(){
 		running = false;
+		listener.stop();
+			listenerThread.stop();
+//			listenerThread.join();
 	}
 	
 	public void showStats(boolean showStats){
