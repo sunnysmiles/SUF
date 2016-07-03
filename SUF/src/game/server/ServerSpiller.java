@@ -16,13 +16,21 @@ public class ServerSpiller extends AbstractServerPlayer {
 	private int id;
 	private String farve;
 	private boolean ready;
-	public ArrayList<Ordre> ordrer;
 	private Server server;
+	private boolean ordrerCompleted = false;
+
+	public boolean isOrdrerCompleted() {
+		return ordrerCompleted;
+	}
+
+	public void setOrdrerCompleted(boolean ordrerCompleted) {
+		this.ordrerCompleted = ordrerCompleted;
+	}
 
 	public ServerSpiller(PlayerConnection con, int id, String farve,
 			Server server) {
 		super(con, id);
-		ordrer = new ArrayList<Ordre>();
+
 		this.id = id;
 		this.setFarve(farve);
 		ready = false;
@@ -62,26 +70,4 @@ public class ServerSpiller extends AbstractServerPlayer {
 		return ready;
 	}
 
-	public void udførOrder(Server server) {
-		for(Ordre ordre : ordrer){
-			ordre.udfør(this, server);
-		}
-		ordrer.clear();
-	}
-
-	public void tilføjOrdre(Ordre ordre) {
-		for (Ordre tmp : ordrer) {
-			if (tmp.getLokalgruppeID() == ordre.getLokalgruppeID()) {
-				ordrer.remove(tmp);
-			}
-		}
-		ordrer.add(ordre);
-	}
-
-	public void sendOrdre() {
-		for(Ordre ordre : ordrer){
-			server.toAll(new OrdreAddedPacket(ordre.getName(), ordre
-					.getLokalgruppeID()));
-		}
-	}
 }

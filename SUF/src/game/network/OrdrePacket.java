@@ -15,7 +15,7 @@ public class OrdrePacket implements ServerPacket<Server, ServerSpiller> {
 
 	public void parse(Server server, ServerSpiller serverPlayer) {
 		if (ordre.isValid(serverPlayer, server)) {
-			serverPlayer.tilføjOrdre(ordre);
+			server.tilføjOrdre(ordre, serverPlayer);
 		}
 	}
 

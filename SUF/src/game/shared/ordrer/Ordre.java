@@ -17,6 +17,7 @@ public abstract class Ordre implements Serializable{
 	
 	public boolean isValid(ServerSpiller sp, Server server){
 		if(sp.getFarve().equals(server.lokalgruppeFraID(lokalgruppeID).getFarve())) return true;
+		System.out.println("Ordrer not valid");
 		return false;
 	}
 	

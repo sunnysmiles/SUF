@@ -1,9 +1,8 @@
-Rewrite getLedelse in randomizer
-
-Implement a deterministic Randomizer for server
 Implement J-UNIT tests for the current features
 Manually test that the views update correctly
 
+
+Rewrite getLedelse in randomizer
 
 
 GAMMELT

@@ -34,8 +34,7 @@ public class Tests {
 		new Thread(g2).start();
 		waitsShort();
 		server.addCommand("Start");
-		while (g1.getState() != ClientGameState.ORDRER)
-			waitsShort();
+		waitForState(ClientGameState.ORDRER, g1, g2);
 	}
 
 	//Checks farve assignment, timecards-routine, and ordre-packets
@@ -73,7 +72,6 @@ public class Tests {
 		readyWaitForState(ClientGameState.PRE_START, g1, g2);
 		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Sort"), 4);
 		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Hvid"), 1);
-
 	}
 	
 	@After

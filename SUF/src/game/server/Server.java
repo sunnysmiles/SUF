@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Scanner;
 
 import engine.network.ClientPacket;
@@ -30,6 +31,7 @@ import game.shared.Lokalgruppe;
 import game.shared.Medlem;
 import game.shared.Region;
 import game.shared.Stats;
+import game.shared.ordrer.Ordre;
 import game.shared.timecards.Dummy2;
 import game.shared.timecards.Dummy3;
 import game.shared.timecards.LostMemberCard;
@@ -60,6 +62,8 @@ public class Server extends AbstractServer implements Parser {
 	public int month = 0;
 	private ArrayList<String> commands;
 	public boolean gameStarted = false;
+	public ArrayList<Ordre> ordrer;
+	public Hashtable<Ordre, ServerSpiller> ordrerOwner;
 
 	public enum ServerState {
 		ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_KOO_VALG, LEDELSE_FORSLAG, PRE_START, PRE_INIT
@@ -132,25 +136,25 @@ public class Server extends AbstractServer implements Parser {
 		}
 	}
 
+	private void resetOrdreCompleted() {
+		for(ServerSpiller sp : serverSpillere){
+			sp.setOrdrerCompleted(false);
+		}
+	}
+	
+	private boolean isOrdrerCompleted(){
+		boolean check = true;
+		for(ServerSpiller sp : serverSpillere){
+			if(!sp.isOrdrerCompleted())
+				check = false;
+		}
+		return check;
+	}
+
 	public void standardUpdate() {
 		parseFromServerPlayers();
 		for (ServerSpiller serverPlayer : serverSpillere) {
 			serverPlayer.update();
-		}
-	}
-
-	private void sendOrdre() {
-		for (ServerSpiller sp : serverSpillere) {
-			sp.sendOrdre();
-		}
-	}
-
-	private void udførOrdre() {
-		for (ServerSpiller sp : serverSpillere) {
-			sp.udførOrder(this);
-		}
-		for (Lokalgruppe lg : lokalgrupper) {
-			toAll(new OrdreAddedPacket("Ingen", lg.getId()));
 		}
 	}
 
@@ -192,6 +196,8 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	public void init() {
+		ordrerOwner = new Hashtable<Ordre,ServerSpiller>();
+		ordrer = new ArrayList<Ordre>();
 		commands = new ArrayList<String>();
 		new Thread(new ServerConsole(this)).start();
 		stats = new Stats();
@@ -247,7 +253,6 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	private void tidenGår() {
-		System.out.println("TidenGår");
 		for (int i = 0; i < 3; i++) {
 			TimeCard c = randomizer.getTimeCard(type1);
 			c.action(this);
@@ -497,5 +502,32 @@ public class Server extends AbstractServer implements Parser {
 
 	public ServerState getState() {
 		return state;
+	}
+
+	
+	public void udførOrdre() {
+		for(Ordre ordre : ordrer){
+			ordre.udfør(ordrerOwner.get(ordre), this);
+		}
+		ordrer.clear();
+		ordrerOwner.clear();
+	}
+
+	public void tilføjOrdre(Ordre ordre, ServerSpiller serverPlayer) {
+		for (Ordre tmp : ordrer) {
+			if (tmp.getLokalgruppeID() == ordre.getLokalgruppeID()) {
+				ordrer.remove(tmp);
+				ordrerOwner.remove(ordre);
+			}
+		}
+		ordrer.add(ordre);
+		ordrerOwner.put(ordre, serverPlayer);
+	}
+
+	public void sendOrdre() {
+		for(Ordre ordre : ordrer){
+			toAll(new OrdreAddedPacket(ordre.getName(), ordre
+					.getLokalgruppeID()));
+		}
 	}
 }
