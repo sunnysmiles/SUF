@@ -3,7 +3,7 @@ package game.client;
 import game.client.Game.ClientGameState;
 import game.shared.Lokalgruppe;
 import game.shared.ordrer.HvervningsOrdre;
-import game.shared.ordrer.SkolingOrdre;
+import game.shared.ordrer.SkolingsOrdre;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

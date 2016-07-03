@@ -3,7 +3,7 @@ package game.client;
 import engine.utils.SquareIcon;
 import game.shared.Lokalgruppe;
 import game.shared.ordrer.HvervningsOrdre;
-import game.shared.ordrer.SkolingOrdre;
+import game.shared.ordrer.SkolingsOrdre;
 
 import java.awt.Color;
 import java.awt.Component;

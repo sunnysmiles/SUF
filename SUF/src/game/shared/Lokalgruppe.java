@@ -25,7 +25,14 @@ public class Lokalgruppe implements Serializable {
 		setMedlemmer(new ArrayList<Medlem>());
 		this.setReg(reg);
 		ordre = "Ingen";
-
+	}
+	
+	public int numberOfFarve(String farve){
+		int c = 0;
+		for(Medlem m : medlemmer){
+			if(m.getFarve().equals(farve)) c++;
+		}
+		return c;
 	}
 
 	public void tilføjMedlem(Medlem medlem) {

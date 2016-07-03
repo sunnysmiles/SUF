@@ -10,7 +10,9 @@ import game.server.random.RealRandomizer;
 import game.shared.Entry;
 import game.shared.MonthEntry;
 import game.shared.ordrer.HvervningsOrdre;
+import game.shared.ordrer.SkolingsOrdre;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,52 +38,55 @@ public class Tests {
 			waitsShort();
 	}
 
+	//Checks farve assignment, timecards-routine, and ordre-packets
 	@Test
 	public void test() {
 		assertEquals("Rød", g1.farve);
 		assertEquals("Sort", g2.farve);
-		for (MonthEntry me : g1.getJournal().getEntries()) {
-			for (Entry e : me.getEntries()) {
-				System.out.println(e.getText());
-			}
-		}
 		assertEquals(
 				server.lokalgruppeFraNavn("Aalborg").getMedlemmer().size(), 7);
 		g1.addOrdre(new HvervningsOrdre(g1.lokalgruppeFraNavn("Aalborg")
 				.getId()));
-		g1.ready();
-		g2.ready();
-		waitForState(ClientGameState.KOO, g1, g2);
-		g1.ready();
-		g2.ready();
-		waitForState(ClientGameState.PRE_START, g1, g2);
+		readyWaitForState(ClientGameState.KOO, g1, g2);
+		readyWaitForState(ClientGameState.PRE_START, g1, g2);
 		assertEquals(
 				server.lokalgruppeFraNavn("Aalborg").getMedlemmer().size(), 8);
+		readyWaitForState(ClientGameState.ORDRER, g1, g2);
+		assertEquals(
+				server.lokalgruppeFraNavn("Aalborg").getMedlemmer().size(), 5);
+	}
+	
+	public static void printJournal(Game g){
+		for (MonthEntry me : g.getJournal().getEntries()) {
+			for (Entry e : me.getEntries()) {
+				System.out.println(e.getText());
+			}
+		}
+	}
+	
+	@Test
+	public void testSkiftFarve() {
+		assertEquals(3, server.lokalgruppeFraNavn("Kolding").numberOfFarve("Sort"));
+		assertEquals(2, server.lokalgruppeFraNavn("Kolding").numberOfFarve("Hvid"));
+		g2.addOrdre(new SkolingsOrdre(server.lokalgruppeFraNavn("Kolding").getId()));
+		readyWaitForState(ClientGameState.KOO, g1, g2);
+		readyWaitForState(ClientGameState.PRE_START, g1, g2);
+		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Sort"), 4);
+		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Hvid"), 1);
+
+	}
+	
+	@After
+	public void cleanUp(){
 		server.stop();
 		waitsLong();
 	}
 	
-	@Test
-	public void test2() {
-		assertEquals("Rød", g1.farve);
-		assertEquals("Sort", g2.farve);
-		for (MonthEntry me : g1.getJournal().getEntries()) {
-			for (Entry e : me.getEntries()) {
-				System.out.println(e.getText());
-			}
-		}
-		assertEquals(
-				server.lokalgruppeFraNavn("Aalborg").getMedlemmer().size(), 7);
-		g1.addOrdre(new HvervningsOrdre(g1.lokalgruppeFraNavn("Aalborg")
-				.getId()));
+	public static void readyWaitForState(ClientGameState state, Game g1, Game g2){
 		g1.ready();
 		g2.ready();
-		waitForState(ClientGameState.KOO, g1, g2);
-		g1.ready();
-		g2.ready();
-		waitForState(ClientGameState.PRE_START, g1, g2);
-		assertEquals(
-				server.lokalgruppeFraNavn("Aalborg").getMedlemmer().size(), 8);
+		while(g1.getState() != state || g2.getState() != state)
+			waitsShort();
 	}
 
 	public static void waitForState(ClientGameState state, Game g1, Game g2){

@@ -8,9 +8,9 @@ import game.server.ServerSpiller;
 import game.shared.Lokalgruppe;
 import game.shared.Medlem;
 
-public class SkolingOrdre extends Ordre {
+public class SkolingsOrdre extends Ordre {
 
-	public SkolingOrdre(int id) {
+	public SkolingsOrdre(int id) {
 		super(id);
 	}
 

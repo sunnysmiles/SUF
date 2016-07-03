@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 
 import game.shared.Lokalgruppe;
 import game.shared.ordrer.HvervningsOrdre;
-import game.shared.ordrer.SkolingOrdre;
+import game.shared.ordrer.SkolingsOrdre;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -26,7 +26,7 @@ public class LokalgruppePopup extends JPopupMenu {
 		this.add(hvervning);
 
 		JMenuItem skoling = new JMenuItem("skoling");
-		skoling.addActionListener(new OrdreActionListener(new SkolingOrdre(
+		skoling.addActionListener(new OrdreActionListener(new SkolingsOrdre(
 				listenerLG.getId()), mainView));
 		this.add(skoling);
 		this.show(e.getComponent(), e.getX(), e.getY());
