@@ -491,7 +491,7 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	
-	public synchronized void udførOrdre() {
+	public  void udførOrdre() {
 		for(Ordre ordre : ordrer){
 			ordre.udfør(ordrerOwner.get(ordre), this);
 		}
@@ -499,18 +499,23 @@ public class Server extends AbstractServer implements Parser {
 		ordrerOwner.clear();
 	}
 
-	public synchronized void tilføjOrdre(Ordre ordre, ServerSpiller serverPlayer) {
+	public  void tilføjOrdre(Ordre ordre, ServerSpiller serverPlayer) {
+		ArrayList<Ordre> toBeRemoved = new ArrayList<Ordre>();
 		for (Ordre tmp : ordrer) {
 			if (tmp.getLokalgruppeID() == ordre.getLokalgruppeID()) {
-				ordrer.remove(tmp);
-				ordrerOwner.remove(ordre);
+				toBeRemoved.add(tmp);
 			}
 		}
+		for(Ordre tmp : toBeRemoved){
+			ordrer.remove(tmp);
+			ordrerOwner.remove(tmp);
+		}
+		toBeRemoved.clear();
 		ordrer.add(ordre);
 		ordrerOwner.put(ordre, serverPlayer);
 	}
 
-	public synchronized void sendOrdre() {
+	public  void sendOrdre() {
 		for(Ordre ordre : ordrer){
 			toAll(new OrdreAddedPacket(ordre.getName(), ordre
 					.getLokalgruppeID()));
