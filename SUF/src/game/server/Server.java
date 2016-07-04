@@ -136,20 +136,6 @@ public class Server extends AbstractServer implements Parser {
 		}
 	}
 
-	private void resetOrdreCompleted() {
-		for(ServerSpiller sp : serverSpillere){
-			sp.setOrdrerCompleted(false);
-		}
-	}
-	
-	private boolean isOrdrerCompleted(){
-		boolean check = true;
-		for(ServerSpiller sp : serverSpillere){
-			if(!sp.isOrdrerCompleted())
-				check = false;
-		}
-		return check;
-	}
 
 	public void standardUpdate() {
 		parseFromServerPlayers();
@@ -505,7 +491,7 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	
-	public void udførOrdre() {
+	public synchronized void udførOrdre() {
 		for(Ordre ordre : ordrer){
 			ordre.udfør(ordrerOwner.get(ordre), this);
 		}
@@ -513,7 +499,7 @@ public class Server extends AbstractServer implements Parser {
 		ordrerOwner.clear();
 	}
 
-	public void tilføjOrdre(Ordre ordre, ServerSpiller serverPlayer) {
+	public synchronized void tilføjOrdre(Ordre ordre, ServerSpiller serverPlayer) {
 		for (Ordre tmp : ordrer) {
 			if (tmp.getLokalgruppeID() == ordre.getLokalgruppeID()) {
 				ordrer.remove(tmp);
@@ -524,7 +510,7 @@ public class Server extends AbstractServer implements Parser {
 		ordrerOwner.put(ordre, serverPlayer);
 	}
 
-	public void sendOrdre() {
+	public synchronized void sendOrdre() {
 		for(Ordre ordre : ordrer){
 			toAll(new OrdreAddedPacket(ordre.getName(), ordre
 					.getLokalgruppeID()));

@@ -74,6 +74,20 @@ public class Tests {
 		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Hvid"), 1);
 	}
 	
+	@Test
+	public void testChangeOrdre() {
+		assertEquals(3, server.lokalgruppeFraNavn("Kolding").numberOfFarve("Sort"));
+		assertEquals(2, server.lokalgruppeFraNavn("Kolding").numberOfFarve("Hvid"));
+		assertEquals(8, server.lokalgruppeFraNavn("Kolding").getMedlemmer().size());
+		g2.addOrdre(new SkolingsOrdre(server.lokalgruppeFraNavn("Kolding").getId()));
+		g2.addOrdre(new HvervningsOrdre(server.lokalgruppeFraNavn("Kolding").getId()));
+		readyWaitForState(ClientGameState.KOO, g1, g2);
+		readyWaitForState(ClientGameState.PRE_START, g1, g2);
+		assertEquals(9, server.lokalgruppeFraNavn("Kolding").getMedlemmer().size());
+		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Sort"), 3);
+		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Hvid"), 2);
+	}
+	
 	@After
 	public void cleanUp(){
 		server.stop();
