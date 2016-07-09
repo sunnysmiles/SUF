@@ -2,7 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 import game.client.Game;
-import game.client.Game.ClientGameState;
+import game.client.Game.ClientState;
 import game.server.Server;
 import game.server.Server.ServerState;
 import game.server.random.FakeRandomizer;
@@ -34,7 +34,7 @@ public class Tests {
 		new Thread(g2).start();
 		waitsShort();
 		server.addCommand("Start");
-		waitForState(ClientGameState.ORDRER, g1, g2);
+		waitForState(ClientState.ORDRER, g1, g2);
 	}
 
 	//Checks farve assignment, timecards-routine, and ordre-packets
@@ -46,11 +46,13 @@ public class Tests {
 				server.lokalgruppeFraNavn("Aalborg").getMedlemmer().size(), 7);
 		g1.addOrdre(new HvervningsOrdre(g1.lokalgruppeFraNavn("Aalborg")
 				.getId()));
-		readyWaitForState(ClientGameState.KOO, g1, g2);
-		readyWaitForState(ClientGameState.PRE_START, g1, g2);
+		readyWaitForState(ClientState.KOO, g1, g2);
+		readyWaitForState(ClientState.LEDELSE_KOO_TILLID, g1, g2);
+		readyWaitForState(ClientState.LEDELSE_KOO_VALG_OPSTIL, g1, g2);
+		readyWaitForState(ClientState.PRE_START, g1, g2);
 		assertEquals(
 				server.lokalgruppeFraNavn("Aalborg").getMedlemmer().size(), 8);
-		readyWaitForState(ClientGameState.ORDRER, g1, g2);
+		readyWaitForState(ClientState.ORDRER, g1, g2);
 		assertEquals(
 				server.lokalgruppeFraNavn("Aalborg").getMedlemmer().size(), 5);
 	}
@@ -68,8 +70,10 @@ public class Tests {
 		assertEquals(3, server.lokalgruppeFraNavn("Kolding").numberOfFarve("Sort"));
 		assertEquals(2, server.lokalgruppeFraNavn("Kolding").numberOfFarve("Hvid"));
 		g2.addOrdre(new SkolingsOrdre(server.lokalgruppeFraNavn("Kolding").getId()));
-		readyWaitForState(ClientGameState.KOO, g1, g2);
-		readyWaitForState(ClientGameState.PRE_START, g1, g2);
+		readyWaitForState(ClientState.KOO, g1, g2);
+		readyWaitForState(ClientState.LEDELSE_KOO_TILLID, g1, g2);
+		readyWaitForState(ClientState.LEDELSE_KOO_VALG_OPSTIL, g1, g2);
+		readyWaitForState(ClientState.PRE_START, g1, g2);
 		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Sort"), 4);
 		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Hvid"), 1);
 	}
@@ -81,11 +85,18 @@ public class Tests {
 		assertEquals(8, server.lokalgruppeFraNavn("Kolding").getMedlemmer().size());
 		g2.addOrdre(new SkolingsOrdre(server.lokalgruppeFraNavn("Kolding").getId()));
 		g2.addOrdre(new HvervningsOrdre(server.lokalgruppeFraNavn("Kolding").getId()));
-		readyWaitForState(ClientGameState.KOO, g1, g2);
-		readyWaitForState(ClientGameState.PRE_START, g1, g2);
+		readyWaitForState(ClientState.KOO, g1, g2);
+		readyWaitForState(ClientState.LEDELSE_KOO_TILLID, g1, g2);
+		readyWaitForState(ClientState.LEDELSE_KOO_VALG_OPSTIL, g1, g2);
+		readyWaitForState(ClientState.PRE_START, g1, g2);
 		assertEquals(9, server.lokalgruppeFraNavn("Kolding").getMedlemmer().size());
-		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Sort"), 3);
 		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Hvid"), 2);
+		assertEquals(server.lokalgruppeFraNavn("Kolding").numberOfFarve("Sort"), 4);
+	}
+	
+	@Test
+	public void kooInitalValgTest(){
+		
 	}
 	
 	@After
@@ -94,14 +105,14 @@ public class Tests {
 		waitsLong();
 	}
 	
-	public static void readyWaitForState(ClientGameState state, Game g1, Game g2){
+	public static void readyWaitForState(ClientState state, Game g1, Game g2){
 		g1.ready();
 		g2.ready();
 		while(g1.getState() != state || g2.getState() != state)
 			waitsShort();
 	}
 
-	public static void waitForState(ClientGameState state, Game g1, Game g2){
+	public static void waitForState(ClientState state, Game g1, Game g2){
 		while(g1.getState() != state || g2.getState() != state)
 			waitsShort();
 	}

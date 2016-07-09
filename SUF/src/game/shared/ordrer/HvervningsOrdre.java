@@ -3,7 +3,7 @@ package game.shared.ordrer;
 import engine.utils.Util;
 import game.network.JournalEntryPacket;
 import game.server.Server;
-import game.server.ServerSpiller;
+import game.server.ServerPlayer;
 import game.shared.Lokalgruppe;
 import game.shared.Medlem;
 
@@ -12,7 +12,7 @@ public class HvervningsOrdre extends Ordre {
 		super(id);
 	}
 
-	public void udfør(ServerSpiller sp, Server server) {
+	public void udfør(ServerPlayer sp, Server server) {
 		Lokalgruppe lg = server.lokalgruppeFraID(lokalgruppeID);
 		Medlem m = server.randomizer.getHvervningsOrdreMedlem(lg,
 				sp.getFarve(), server.medlemCounter);

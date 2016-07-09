@@ -7,12 +7,12 @@ import javax.swing.Icon;
 import engine.network.ClientPacket;
 import engine.utils.SquareIcon;
 import game.client.*;
-import game.client.Game.ClientGameState;
+import game.client.Game.ClientState;
 
 public class StateChangePacket implements ClientPacket<MainView> {
 
-	private ClientGameState newState;
-	public StateChangePacket(ClientGameState state){
+	private ClientState newState;
+	public StateChangePacket(ClientState state){
 		newState = state;
 	}
 	public void parse(Game game) {

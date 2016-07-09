@@ -30,6 +30,7 @@ public class MedlemmerView extends JFrame {
 
 	public void show(final Lokalgruppe lg) {
 		this.lg = lg;
+		System.out.println(lg.getMedlemmer().size());
 		if (listScroller != null)
 			this.remove(listScroller);
 		panel = new JPanel();

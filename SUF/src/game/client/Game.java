@@ -7,10 +7,11 @@ import game.client.DataChangedListener.ChangeType;
 import game.network.ClientReadyPacket;
 import game.network.OrdrePacket;
 import game.server.Server;
-import game.server.ServerSpiller;
+import game.server.ServerPlayer;
 import game.shared.By;
 import game.shared.Entry;
 import game.shared.Journal;
+import game.shared.Koo;
 import game.shared.Ledelse;
 import game.shared.Lokalgruppe;
 import game.shared.Medlem;
@@ -24,11 +25,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Game implements Runnable {
-	public enum ClientGameState {
-		NOT_STARTED, PRE_START, ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_FORSLAG, LEDELSE_KOO_VALG
+	public enum ClientState {
+		NOT_STARTED, PRE_START, ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_FORSLAG, LEDELSE_KOO_VALG, LEDELSE_KOO_VALG_OPSTIL, LEDELSE_KOO_VALG_STEM
 	};
 
-	private ClientGameState state = ClientGameState.PRE_START;
+	private ClientState state = ClientState.PRE_START;
 	public ArrayList<By> byer;
 	private ArrayList<Medlem> medlemmer;
 	private ArrayList<Region> regioner;
@@ -44,14 +45,17 @@ public class Game implements Runnable {
 	private boolean running = true;
 	private ArrayList<DataChangedListener> dataListeners;
 	private boolean ready = false;
+	private Koo koo;
+	private ArrayList<Medlem> kooOpstillet;
 
 	public Game() {
 		connection = new Connection();
 		new Thread(connection).start();
 		journal = new Journal();
 		journal.addEntry(new MonthEntry("Januar"));
-		state = ClientGameState.NOT_STARTED;
+		state = ClientState.NOT_STARTED;
 		dataListeners = new ArrayList<DataChangedListener>();
+		kooOpstillet = new ArrayList<Medlem>();
 
 	}
 
@@ -76,20 +80,21 @@ public class Game implements Runnable {
 	}
 
 	public void addOrdre(Ordre ordre) {
-		if (state != ClientGameState.ORDRER)
+		if (state != ClientState.ORDRER)
 			return;
-		if (!farve.equals(lokalgruppeFraID(ordre.getLokalgruppeID()).getFarve()))
+		if (!farve
+				.equals(lokalgruppeFraID(ordre.getLokalgruppeID()).getFarve()))
 			return;
 		sendPacket(new OrdrePacket(ordre));
 		lokalgruppeFraID(ordre.getLokalgruppeID()).tilføjOrdre(ordre.getName());
 	}
 
-	public void sendPacket(ServerPacket<Server, ServerSpiller> packet) {
+	public void sendPacket(ServerPacket<Server, ServerPlayer> packet) {
 		connection.stack(packet);
 		sendData();
 	}
 
-	public void stack(ServerPacket<Server, ServerSpiller> packet) {
+	public void stack(ServerPacket<Server, ServerPlayer> packet) {
 		connection.stack(packet);
 	}
 
@@ -118,6 +123,11 @@ public class Game implements Runnable {
 
 	public void ready() {
 		ready = true;
+		switch (state) {
+		case LEDELSE_KOO_VALG_OPSTIL:
+			sendPacket(new kOpstillingPacket(kooOpstillet));
+			kooOpstillet.clear();
+		}
 		sendPacket(new ClientReadyPacket());
 	}
 
@@ -156,7 +166,7 @@ public class Game implements Runnable {
 		}
 		return null;
 	}
-	
+
 	public Lokalgruppe lokalgruppeFraNavn(String navn) {
 		for (Lokalgruppe lg : lokalgrupper) {
 			if (lg.getNavn().equals(navn))
@@ -173,7 +183,7 @@ public class Game implements Runnable {
 		return null;
 	}
 
-	public ClientGameState getState() {
+	public ClientState getState() {
 		return state;
 	}
 
@@ -202,6 +212,10 @@ public class Game implements Runnable {
 	}
 
 	public void removeMedlem(int medlemID) {
+		for (Lokalgruppe lg : lokalgrupper) {
+			if (lg.getMedlemmer().contains(medlemFraID(medlemID)))
+				lg.getMedlemmer().remove(medlemFraID(medlemID));
+		}
 		medlemmer.remove(medlemFraID(medlemID));
 	}
 
@@ -247,16 +261,31 @@ public class Game implements Runnable {
 		this.spillere = clientSpillere;
 		this.month = "Januar";
 		this.stats = stats;
+		this.koo = new Koo();
 		this.ledelsen = new Ledelse(ledelsen, getMedlemmer(), getRegioner());
 		dataChangedSignal(ChangeType.GAME_STARTED);
-		this.state = ClientGameState.PRE_START;
+		this.state = ClientState.PRE_START;
 		sendPacket(new ClientReadyPacket());
 	}
 
-	public void changeState(ClientGameState newState) {
-		ready  = false;
+	public void changeState(ClientState newState) {
+		ready = false;
 		state = newState;
 		dataChangedSignal(ChangeType.STATE_CHANGED);
+	}
+
+	public void opstilKoo(Medlem m) {
+		if (!(state == ClientState.LEDELSE_KOO_VALG_OPSTIL))
+			return;
+		if (ledelsen.getAlle().contains(m)) {
+			if (m.getFarve().equals(farve)) {
+				if (!kooOpstillet.contains(m))
+					kooOpstillet.add(m);
+				else
+					kooOpstillet.remove(m);
+				dataChangedSignal(ChangeType.KOO_OPSTILLET);
+			}
+		}
 	}
 
 	public ArrayList<Medlem> getMedlemmer() {
@@ -270,5 +299,21 @@ public class Game implements Runnable {
 	public boolean isReady() {
 		return ready;
 	}
-	
+
+	public ArrayList<Medlem> translateFromServer(ArrayList<Medlem> serverList) {
+		ArrayList<Medlem> clientList = new ArrayList<Medlem>();
+		if (serverList.isEmpty())
+			return clientList;
+		for (Medlem m : serverList) {
+			clientList.add(medlemFraID(m.getID()));
+		}
+		return clientList;
+	}
+
+	public void setOpstilling(ArrayList<Medlem> opstillet) {
+		kooOpstillet.clear();
+		kooOpstillet.addAll(opstillet);
+		dataChangedSignal(ChangeType.KOO_OPSTILLET);
+	}
+
 }

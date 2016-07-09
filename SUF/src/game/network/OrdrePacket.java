@@ -2,10 +2,10 @@ package game.network;
 
 import engine.network.ServerPacket;
 import game.server.Server;
-import game.server.ServerSpiller;
+import game.server.ServerPlayer;
 import game.shared.ordrer.Ordre;
 
-public class OrdrePacket implements ServerPacket<Server, ServerSpiller> {
+public class OrdrePacket implements ServerPacket<Server, ServerPlayer> {
 
 	private Ordre ordre;
 
@@ -13,7 +13,7 @@ public class OrdrePacket implements ServerPacket<Server, ServerSpiller> {
 		this.ordre = ordre;
 	}
 
-	public void parse(Server server, ServerSpiller serverPlayer) {
+	public void parse(Server server, ServerPlayer serverPlayer) {
 		if (ordre.isValid(serverPlayer, server)) {
 			server.tilføjOrdre(ordre, serverPlayer);
 		}

@@ -15,7 +15,8 @@ import engine.server.AbstractServerPlayer;
 import engine.server.Parser;
 import engine.server.PlayerConnection;
 import game.client.MainView;
-import game.client.Game.ClientGameState;
+import game.client.Game.ClientState;
+import game.client.kOpstillingPacket;
 import game.network.JournalMonthPacket;
 import game.network.OrdreAddedPacket;
 import game.network.SetFarvePacket;
@@ -26,6 +27,7 @@ import game.server.random.Randomizer;
 import game.server.random.RealRandomizer;
 import game.shared.By;
 import game.shared.Journal;
+import game.shared.Koo;
 import game.shared.Ledelse;
 import game.shared.Lokalgruppe;
 import game.shared.Medlem;
@@ -41,7 +43,7 @@ import game.shared.timecards.TimeCard;
 
 public class Server extends AbstractServer implements Parser {
 
-	private ArrayList<ServerSpiller> serverSpillere;
+	private ArrayList<ServerPlayer> serverSpillere;
 	private ServerArt art;
 
 	public ArrayList<Medlem> medlemmer;
@@ -63,10 +65,12 @@ public class Server extends AbstractServer implements Parser {
 	private ArrayList<String> commands;
 	public boolean gameStarted = false;
 	public ArrayList<Ordre> ordrer;
-	public Hashtable<Ordre, ServerSpiller> ordrerOwner;
+	public Hashtable<Ordre, ServerPlayer> ordrerOwner;
+	private Koo koo;
+	private ArrayList<Medlem> kooOpstillet;
 
 	public enum ServerState {
-		ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_KOO_VALG, LEDELSE_FORSLAG, PRE_START, PRE_INIT
+		ORDRER, KOO, LEDELSE_KOO_TILLID, LEDELSE_KOO_VALG_OPSTIL, LEDELSE_FORSLAG, PRE_START, PRE_INIT, LEDELSE_KOO_VALG_STEM
 	};
 
 	private ServerState state = ServerState.PRE_INIT;
@@ -89,6 +93,9 @@ public class Server extends AbstractServer implements Parser {
 					System.out.println("Game Started");
 				}
 				break;
+			case "Stop":
+				stop();
+				break;
 			default:
 				System.out.println("Unrecognized command");
 				break;
@@ -108,7 +115,7 @@ public class Server extends AbstractServer implements Parser {
 				resetReady();
 				tidenGår();
 				state = ServerState.ORDRER;
-				toAll(new StateChangePacket(ClientGameState.ORDRER));
+				toAll(new StateChangePacket(ClientState.ORDRER));
 			}
 			break;
 		case ORDRER:
@@ -116,7 +123,7 @@ public class Server extends AbstractServer implements Parser {
 				resetReady();
 				sendOrdre();
 				state = ServerState.KOO;
-				toAll(new StateChangePacket(ClientGameState.KOO));
+				toAll(new StateChangePacket(ClientState.KOO));
 			}
 			break;
 		case KOO:
@@ -127,31 +134,55 @@ public class Server extends AbstractServer implements Parser {
 				if (month > 11)
 					month = 0;
 				toAll(new JournalMonthPacket(Journal.getMonth(month)));
-				state = ServerState.PRE_START;
-				toAll(new StateChangePacket(ClientGameState.PRE_START));
+				state = ServerState.LEDELSE_KOO_TILLID;
+				toAll(new StateChangePacket(ClientState.LEDELSE_KOO_TILLID));
 			}
 			break;
+		case LEDELSE_KOO_TILLID:
+			if (isReady()) {
+				resetReady();
+				if (koo.getMonthsLeft() <= 0) {
+					state = ServerState.LEDELSE_KOO_VALG_OPSTIL;
+					toAll(new StateChangePacket(
+							ClientState.LEDELSE_KOO_VALG_OPSTIL));
+					break;
+				}
+				state = ServerState.PRE_START;
+				toAll(new StateChangePacket(ClientState.PRE_START));
+			}
+			break;
+		case LEDELSE_KOO_VALG_OPSTIL:
+			if (isReady()) {
+				resetReady();
+				toAll(new kOpstillingPacket(kooOpstillet));
+				if (kooOpstillet.size() < 3) {
+					kooOpstillet.clear();
+					break;
+				} else {
+					state = ServerState.LEDELSE_KOO_VALG_STEM;
+					toAll(new StateChangePacket(ClientState.LEDELSE_KOO_VALG_STEM));
+				}
+			}
 		default:
 			break;
 		}
 	}
 
-
 	public void standardUpdate() {
 		parseFromServerPlayers();
-		for (ServerSpiller serverPlayer : serverSpillere) {
+		for (ServerPlayer serverPlayer : serverSpillere) {
 			serverPlayer.update();
 		}
 	}
 
 	private void resetReady() {
-		for (ServerSpiller sp : serverSpillere) {
+		for (ServerPlayer sp : serverSpillere) {
 			sp.setReady(false);
 		}
 	}
 
 	private boolean isReady() {
-		for (ServerSpiller sp : serverSpillere) {
+		for (ServerPlayer sp : serverSpillere) {
 			if (!sp.isReady())
 				return false;
 		}
@@ -159,8 +190,8 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	private void parseFromServerPlayers() {
-		ArrayList<ServerSpiller> toBeRemoved = new ArrayList<ServerSpiller>();
-		for (ServerSpiller serverPlayer : serverSpillere) {
+		ArrayList<ServerPlayer> toBeRemoved = new ArrayList<ServerPlayer>();
+		for (ServerPlayer serverPlayer : serverSpillere) {
 			serverPlayer.heartBeat();
 			serverPlayer.parse(this);
 			// This prevents concurrency errors
@@ -169,12 +200,12 @@ public class Server extends AbstractServer implements Parser {
 			 * toBeRemoved.add(serverPlayer);
 			 */
 		}
-		for (ServerSpiller serverPlayer : toBeRemoved) {
+		for (ServerPlayer serverPlayer : toBeRemoved) {
 			removeServerPlayer(serverPlayer);
 		}
 	}
 
-	private void removeServerPlayer(ServerSpiller serverPlayer) {
+	private void removeServerPlayer(ServerPlayer serverPlayer) {
 		System.out.println("Removed Player with id " + serverPlayer.getID());
 		serverPlayer.stop();
 		getPlayerConnections().remove(serverPlayer.getPlayerConnection());
@@ -182,12 +213,14 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	public void init() {
-		ordrerOwner = new Hashtable<Ordre,ServerSpiller>();
+		kooOpstillet = new ArrayList<Medlem>();
+		koo = new Koo();
+		ordrerOwner = new Hashtable<Ordre, ServerPlayer>();
 		ordrer = new ArrayList<Ordre>();
 		commands = new ArrayList<String>();
 		new Thread(new ServerConsole(this)).start();
 		stats = new Stats();
-		serverSpillere = new ArrayList<ServerSpiller>();
+		serverSpillere = new ArrayList<ServerPlayer>();
 		medlemmer = new ArrayList<Medlem>();
 		regioner = new ArrayList<Region>();
 		lokalgrupper = new ArrayList<Lokalgruppe>();
@@ -233,7 +266,7 @@ public class Server extends AbstractServer implements Parser {
 		gameStarted = true;
 		toAll(new StartGamePacket(regioner, lokalgrupper, medlemmer, byer,
 				serverSpillere, stats, ledelsen));
-		for (ServerSpiller sp : serverSpillere) {
+		for (ServerPlayer sp : serverSpillere) {
 			sp.stack(new SetFarvePacket(sp.getFarve()));
 		}
 	}
@@ -271,7 +304,7 @@ public class Server extends AbstractServer implements Parser {
 	}
 
 	public void toAll(ClientPacket<MainView> packet) {
-		for (ServerSpiller sp : serverSpillere) {
+		for (ServerPlayer sp : serverSpillere) {
 			sp.stack(packet);
 		}
 	}
@@ -420,7 +453,7 @@ public class Server extends AbstractServer implements Parser {
 			farve = "Grøn";
 		else
 			farve = "Lilla";
-		ServerSpiller serverPlayer = new ServerSpiller(pCon, idCounter, farve,
+		ServerPlayer serverPlayer = new ServerPlayer(pCon, idCounter, farve,
 				this);
 		System.out.println("Player added with id " + idCounter);
 		idCounter++;
@@ -461,7 +494,7 @@ public class Server extends AbstractServer implements Parser {
 		}
 		return null;
 	}
-	
+
 	public Lokalgruppe lokalgruppeFraID(int id) {
 		for (Lokalgruppe l : lokalgrupper) {
 			if (l.getId() == id)
@@ -490,23 +523,22 @@ public class Server extends AbstractServer implements Parser {
 		return state;
 	}
 
-	
-	public  void udførOrdre() {
-		for(Ordre ordre : ordrer){
+	public void udførOrdre() {
+		for (Ordre ordre : ordrer) {
 			ordre.udfør(ordrerOwner.get(ordre), this);
 		}
 		ordrer.clear();
 		ordrerOwner.clear();
 	}
 
-	public  void tilføjOrdre(Ordre ordre, ServerSpiller serverPlayer) {
+	public void tilføjOrdre(Ordre ordre, ServerPlayer serverPlayer) {
 		ArrayList<Ordre> toBeRemoved = new ArrayList<Ordre>();
 		for (Ordre tmp : ordrer) {
 			if (tmp.getLokalgruppeID() == ordre.getLokalgruppeID()) {
 				toBeRemoved.add(tmp);
 			}
 		}
-		for(Ordre tmp : toBeRemoved){
+		for (Ordre tmp : toBeRemoved) {
 			ordrer.remove(tmp);
 			ordrerOwner.remove(tmp);
 		}
@@ -515,10 +547,33 @@ public class Server extends AbstractServer implements Parser {
 		ordrerOwner.put(ordre, serverPlayer);
 	}
 
-	public  void sendOrdre() {
-		for(Ordre ordre : ordrer){
-			toAll(new OrdreAddedPacket(ordre.getName(), ordre
-					.getLokalgruppeID()));
+	public void sendOrdre() {
+		for (Ordre ordre : ordrer) {
+			toAll(new OrdreAddedPacket(ordre.getName(),
+					ordre.getLokalgruppeID()));
+		}
+	}
+
+	public ArrayList<Medlem> translateFromClient(ArrayList<Medlem> clientList) {
+		ArrayList<Medlem> serverList = new ArrayList<Medlem>();
+		if (clientList.isEmpty())
+			return serverList;
+		for (Medlem m : clientList) {
+			serverList.add(medlemFraID(m.getID()));
+		}
+		return serverList;
+	}
+
+	public void godkendOpstilling(ArrayList<Medlem> opstillet, ServerPlayer sp) {
+		if (opstillet.isEmpty())
+			return;
+		if (!state.equals(ServerState.LEDELSE_KOO_VALG_OPSTIL))
+			return;
+		for (Medlem m : opstillet) {
+			if (!kooOpstillet.contains(m))
+				if (m.getFarve().equals(sp.getFarve()))
+					if (ledelsen.getAlle().contains(m))
+						kooOpstillet.add(m);
 		}
 	}
 }

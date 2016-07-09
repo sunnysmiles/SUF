@@ -9,7 +9,7 @@ import game.client.MainView;
 import game.client.LokalgruppeView;
 import game.client.Spiller;
 import game.server.Server;
-import game.server.ServerSpiller;
+import game.server.ServerPlayer;
 import game.shared.By;
 import game.shared.Ledelse;
 import game.shared.Lokalgruppe;
@@ -29,14 +29,14 @@ public class StartGamePacket implements ClientPacket<MainView> {
 	
 	public StartGamePacket(ArrayList<Region> regioner,
 			ArrayList<Lokalgruppe> lokalgrupper, ArrayList<Medlem> medlemmer,
-			ArrayList<By> byer, ArrayList<ServerSpiller> spillere, Stats stats, Ledelse ledelsen) {
+			ArrayList<By> byer, ArrayList<ServerPlayer> spillere, Stats stats, Ledelse ledelsen) {
 		this.byer = byer;
 		this.regioner = regioner;
 		this.lokalgrupper = lokalgrupper;
 		this.medlemmer = medlemmer;
 		this.stats = stats;
 		clientSpillere = new ArrayList<Spiller>();
-		for(ServerSpiller sp : spillere){
+		for(ServerPlayer sp : spillere){
 			clientSpillere.add(new Spiller(sp.getFarve()));
 		}
 		this.ledelsen = ledelsen;

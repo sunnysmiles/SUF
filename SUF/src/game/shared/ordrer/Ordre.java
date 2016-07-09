@@ -3,7 +3,7 @@ package game.shared.ordrer;
 import java.io.Serializable;
 
 import game.server.Server;
-import game.server.ServerSpiller;
+import game.server.ServerPlayer;
 import game.shared.Lokalgruppe;
 
 public abstract class Ordre implements Serializable{
@@ -13,9 +13,9 @@ public abstract class Ordre implements Serializable{
 		this.lokalgruppeID = lokalgruppeID;
 	}
 	
-	public abstract void udfør(ServerSpiller sp, Server server);
+	public abstract void udfør(ServerPlayer sp, Server server);
 	
-	public boolean isValid(ServerSpiller sp, Server server){
+	public boolean isValid(ServerPlayer sp, Server server){
 		if(sp.getFarve().equals(server.lokalgruppeFraID(lokalgruppeID).getFarve())) return true;
 		System.out.println("Ordrer not valid");
 		return false;

@@ -11,7 +11,7 @@ import game.network.OrdreAddedPacket;
 import game.shared.Lokalgruppe;
 import game.shared.ordrer.Ordre;
 
-public class ServerSpiller extends AbstractServerPlayer {
+public class ServerPlayer extends AbstractServerPlayer {
 
 	private int id;
 	private String farve;
@@ -27,7 +27,7 @@ public class ServerSpiller extends AbstractServerPlayer {
 		this.ordrerCompleted = ordrerCompleted;
 	}
 
-	public ServerSpiller(PlayerConnection con, int id, String farve,
+	public ServerPlayer(PlayerConnection con, int id, String farve,
 			Server server) {
 		super(con, id);
 
