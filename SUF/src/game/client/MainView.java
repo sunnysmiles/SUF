@@ -24,6 +24,7 @@ public class MainView extends AbstractGame implements DataChangedListener{
 	public LokalgruppeView lgView;
 	public int offSet;
 	public MedlemmerView medlemView = new MedlemmerView(this);
+	public LedelseView ledelseView = new LedelseView();
 	public final JLabel iconLabel = new JLabel();
 	private Game game;
 	private boolean gameStarted = false;
@@ -76,6 +77,13 @@ public class MainView extends AbstractGame implements DataChangedListener{
 			public void actionPerformed(ActionEvent e) {
 				journalView.update();
 				journalView.open();
+			}
+		});
+		ledelse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(game.getLedelsen() != null){
+					ledelseView.show(game.getLedelsen());
+				}
 			}
 		});
 		lgButton.addActionListener(new ActionListener() {

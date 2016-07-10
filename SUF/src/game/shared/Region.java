@@ -71,7 +71,7 @@ public class Region implements Serializable {
 
 	// Snak med Malte om valg af regrepere, og lav en implementation der ikke er
 	// retarderet
-	public void setRegRep(Randomizer randomizer) {
+	public void setRegRep(Randomizer randomizer, Ledelse ledelsen) {
 		int r, g, s, l;
 		r = g = s = l = 0;
 		for (Lokalgruppe lg : lokalgrupper) {
@@ -96,10 +96,10 @@ public class Region implements Serializable {
 		else if (l > r && l > g && l > s)
 			farve = "Lilla";
 		if (farve != null) {
-			this.regRep = randomizer.memberForSetRegRep(this, farve);
+			this.regRep = randomizer.memberForSetRegRep(this, farve, ledelsen);
 			return;
 		} else if(this.regRep == null){
-			this.regRep = randomizer.memberForSetRegRep(this, "Hvid");
+			this.regRep = randomizer.memberForSetRegRep(this, "Hvid", ledelsen);
 		}
 	}
 

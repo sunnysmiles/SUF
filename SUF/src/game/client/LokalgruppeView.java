@@ -33,6 +33,7 @@ public class LokalgruppeView extends JFrame {
 	public LokalgruppeView(ArrayList<Lokalgruppe> grupper, MainView game) {
 		this.grupper = grupper;
 		this.game = game;
+		this.setTitle("Lokalgrupper i SUF");
 		update();
 	}
 

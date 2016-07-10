@@ -21,6 +21,6 @@ public interface Randomizer {
 	Lokalgruppe getMoveCapitalCardFromLG(ArrayList<Lokalgruppe> lokalgrupper);
 	Medlem getMoveCapitalCardMedlem(Lokalgruppe lg);
 	Lokalgruppe getMoveCapitalCardToLG(Region region);
-	Medlem memberForSetRegRep(Region reg, String farve);
+	Medlem memberForSetRegRep(Region reg, String farve, Ledelse ledelsen);
 	ArrayList<Medlem> getHvideKooOpstillet(Ledelse ledelsen);
 }

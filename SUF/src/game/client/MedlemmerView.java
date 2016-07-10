@@ -19,18 +19,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class MedlemmerView extends JFrame {
-	private MainView game;
+	private MainView mainView;
 	private Lokalgruppe lg;
 	private JScrollPane listScroller;
 	private JPanel panel;
 
-	public MedlemmerView(MainView game) {
-		this.game = game;
+	public MedlemmerView(MainView mainView) {
+		this.mainView = mainView;
 	}
 
 	public void show(final Lokalgruppe lg) {
+		if(lg == null) return;
+		this.setTitle("Lokalgruppen i " + lg.getNavn());
 		this.lg = lg;
-		System.out.println(lg.getMedlemmer().size());
 		if (listScroller != null)
 			this.remove(listScroller);
 		panel = new JPanel();
@@ -39,7 +40,7 @@ public class MedlemmerView extends JFrame {
 		label.setText(lg.getNavn() + " - " + lg.getOrdre());
 		label.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				new LokalgruppePopup(lg, game, e, false);
+				new LokalgruppePopup(lg, mainView, e, false);
 			}
 		});
 		if (lg.getFarve().equals("Rød")) {

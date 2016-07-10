@@ -316,4 +316,8 @@ public class Game implements Runnable {
 		dataChangedSignal(ChangeType.KOO_OPSTILLET);
 	}
 
+	public Ledelse getLedelsen() {
+		return ledelsen;
+	}
+
 }

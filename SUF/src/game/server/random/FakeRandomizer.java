@@ -54,7 +54,7 @@ public class FakeRandomizer implements Randomizer {
 			ledelsen.tilføjMenigMedlem(medlemmerFarve.get(i));
 		}
 		for (Region r : regioner) {
-			r.setRegRep(this);
+			r.setRegRep(this, ledelsen);
 		}
 		ledelsen.updateRegionsRepræsentanter(regioner);
 		return ledelsen;
@@ -119,11 +119,11 @@ public class FakeRandomizer implements Randomizer {
 	// Returns the first memberFarve of the first lokalgruppe in the first
 	// region
 	// that has a member of farve
-	public Medlem memberForSetRegRep(Region reg, String farve) {
+	public Medlem memberForSetRegRep(Region reg, String farve, Ledelse ledelsen) {
 		ArrayList<Medlem> medlemmerFarve = new ArrayList<Medlem>();
 		for (Lokalgruppe lg : reg.getLokalgrupper()) {
 			for (Medlem med : lg.getMedlemmer()) {
-				if (med.getFarve().equals(farve)) {
+				if (med.getFarve().equals(farve) && !ledelsen.getAlle().contains(med)) {
 					return med;
 				}
 			}
