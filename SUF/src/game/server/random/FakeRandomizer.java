@@ -14,8 +14,10 @@ public class FakeRandomizer implements Randomizer {
 		return cards.get(0);
 	}
 
-	//Adds the first 2 members of each color as menig, and then uses the set regrep algorithm of regioner
-	//the regions regreps are the first member of the region with the color of the region
+	// Adds the first 2 members of each color as menig, and then uses the set
+	// regrep algorithm of regioner
+	// the regions regreps are the first member of the region with the color of
+	// the region
 	public Ledelse getRandomLedelse(ArrayList<Medlem> medlemmer,
 			ArrayList<Region> regioner) {
 		Ledelse ledelsen = new Ledelse();
@@ -127,6 +129,22 @@ public class FakeRandomizer implements Randomizer {
 			}
 		}
 		return null;
+	}
+
+	public ArrayList<Medlem> getHvideKooOpstillet(Ledelse ledelsen) {
+		ArrayList<Medlem> opstillet = new ArrayList<Medlem>();
+		ArrayList<Medlem> afFarve = new ArrayList<Medlem>();
+		for (Medlem m : ledelsen.getAlle()) {
+			if (m.equals("Hvid"))
+				afFarve.add(m);
+		}
+		if (afFarve.size() > 2) {
+			opstillet.add(afFarve.get(0));
+			opstillet.add(afFarve.get(1));
+		} else {
+			opstillet.addAll(afFarve);
+		}
+		return opstillet;
 	}
 
 }

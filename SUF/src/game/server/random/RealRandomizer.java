@@ -54,22 +54,17 @@ public class RealRandomizer implements Randomizer {
 		return lokalgrupper.get(getRandom(0, lokalgrupper.size()));
 	}
 
-	
-	//TODO: This works but it's kinda silly
+	// TODO: This works but it's kinda silly
 	private Medlem randomMedlemFarve(String farve, ArrayList<Medlem> medlemmer) {
-		boolean exists = false;
+		ArrayList<Medlem> afFarve = new ArrayList<Medlem>();
 		for (Medlem m : medlemmer) {
 			if (m.getFarve().equals(farve))
-				exists = true;
-			break;
+				afFarve.add(m);
 		}
-		if (!exists)
+		if (afFarve.isEmpty())
 			return null;
-		Medlem m;
-		do {
-			m = medlemmer.get(getRandom(0, medlemmer.size()));
-		} while (!m.getFarve().equals(farve));
-		return m;
+		else
+			return randomMedlem(afFarve);
 	}
 
 	public Ledelse getRandomLedelse(ArrayList<Medlem> medlemmer,
@@ -229,8 +224,25 @@ public class RealRandomizer implements Randomizer {
 	private Medlem randomMedlem(ArrayList<Medlem> medlemmer) {
 		return medlemmer.get(getRandom(0, medlemmer.size()));
 	}
-	
+
 	public Medlem memberForSetRegRep(Region reg, String farve) {
 		return this.randomMemberFarve(reg, farve);
+	}
+
+	@Override
+	public ArrayList<Medlem> getHvideKooOpstillet(Ledelse ledelsen) {
+		ArrayList<Medlem> opstillet = new ArrayList<Medlem>();
+		int c = 0;
+		float procent = ledelsen.getProcentAfFarve("Hvid");
+		if (procent >= 0.10)
+			c = 1;
+		if (procent >= 0.20)
+			c = 2;
+		if (procent > 0.35)
+			c = 3;
+		for(int i = 0; i < c; i++){
+			opstillet.add(randomMedlemFarve("Hvid", ledelsen.getAlle()));
+		}
+		return opstillet;
 	}
 }

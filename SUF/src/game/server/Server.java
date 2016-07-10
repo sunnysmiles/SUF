@@ -154,13 +154,14 @@ public class Server extends AbstractServer implements Parser {
 		case LEDELSE_KOO_VALG_OPSTIL:
 			if (isReady()) {
 				resetReady();
+				kooOpstillet.addAll(randomizer.getHvideKooOpstillet(ledelsen));
 				toAll(new kOpstillingPacket(kooOpstillet));
 				if (kooOpstillet.size() < 3) {
 					kooOpstillet.clear();
 					break;
 				} else {
-					state = ServerState.LEDELSE_KOO_VALG_STEM;
-					toAll(new StateChangePacket(ClientState.LEDELSE_KOO_VALG_STEM));
+					state = ServerState.PRE_START;
+					toAll(new StateChangePacket(ClientState.PRE_START));
 				}
 			}
 		default:

@@ -7,6 +7,7 @@ import game.shared.Region;
 import game.shared.timecards.TimeCard;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public interface Randomizer {
 	TimeCard getTimeCard(ArrayList<TimeCard> type1);
@@ -21,4 +22,5 @@ public interface Randomizer {
 	Medlem getMoveCapitalCardMedlem(Lokalgruppe lg);
 	Lokalgruppe getMoveCapitalCardToLG(Region region);
 	Medlem memberForSetRegRep(Region reg, String farve);
+	ArrayList<Medlem> getHvideKooOpstillet(Ledelse ledelsen);
 }

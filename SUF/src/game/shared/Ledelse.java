@@ -79,4 +79,13 @@ public class Ledelse implements Serializable {
 	public ArrayList<Medlem> getRegeionsRepræsentanter() {
 		return regionsRepræsentanter;
 	}
+
+	public float getProcentAfFarve(String farve){
+		int fCount = 0;
+		ArrayList<Medlem> medlemmer = getAlle();
+		for(Medlem m : medlemmer){
+			if(m.getFarve().equals(farve)) fCount++;
+		}
+		return fCount / medlemmer.size();
+	}
 }
